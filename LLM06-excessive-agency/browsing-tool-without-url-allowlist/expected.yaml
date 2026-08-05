@@ -1,0 +1,34 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: browsing-tool-without-url-allowlist
+    file: bad_requests_browse_tool.py
+    owaspLlm: "LLM06:2025"
+    severity: high
+    confidence: high
+    explanation: "The browse_url tool is registered on the agent with an unconstrained url parameter and no allowlist check before requests.get() runs."
+  - detector: browsing-tool-without-url-allowlist
+    file: bad_crewai_scrape_tool.py
+    owaspLlm: "LLM06:2025"
+    severity: high
+    confidence: high
+    explanation: "The CrewAI researcher agent's scrape_page tool has no allowed_domains configuration, so the model can direct the scraper at any host."
+  - detector: browsing-tool-without-url-allowlist
+    file: bad_autogen_web_function.py
+    owaspLlm: "LLM06:2025"
+    severity: high
+    confidence: high
+    explanation: "fetch_webpage is registered as an AutoGen function tool with a fully open url argument and no domain/scheme restriction."
+  - detector: browsing-tool-without-url-allowlist
+    file: bad_selenium_navigate_tool.py
+    owaspLlm: "LLM06:2025"
+    severity: high
+    confidence: medium
+    explanation: "The navigate_browser tool drives a real Selenium browser to any model-supplied URL with no allowlist of permitted destinations."
+  - detector: browsing-tool-without-url-allowlist
+    file: bad_langchain_requests_toolkit.py
+    owaspLlm: "LLM06:2025"
+    severity: high
+    confidence: medium
+    explanation: "The agent is loaded with LangChain's requests_all toolkit unmodified, exposing GET/POST/PUT/PATCH/DELETE against arbitrary URLs with allow_dangerous_tools=True and no allowlist."
+pass:
+  - file: good.py

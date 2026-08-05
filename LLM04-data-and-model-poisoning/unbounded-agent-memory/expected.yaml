@@ -1,0 +1,34 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: unbounded-agent-memory
+    file: bad_conversationbuffermemory_no_limit.py
+    owaspLlm: "LLM04:2025"
+    severity: high
+    confidence: high
+    explanation: "ConversationBufferMemory is instantiated with no k (window size) and no max_token_limit, so it keeps every turn forever."
+  - detector: unbounded-agent-memory
+    file: bad_manual_list_append_no_cap.py
+    owaspLlm: "LLM04:2025"
+    severity: high
+    confidence: high
+    explanation: "The module-level `history` list is only ever appended to and sent to the model in full each call, with no truncation or cap."
+  - detector: unbounded-agent-memory
+    file: bad_langgraph_state_messages_unbounded.py
+    owaspLlm: "LLM04:2025"
+    severity: high
+    confidence: medium
+    explanation: "The LangGraph state accumulates messages via add_messages with no trimming/summarization node before the model call."
+  - detector: unbounded-agent-memory
+    file: bad_redis_memory_no_ttl_no_trim.py
+    owaspLlm: "LLM04:2025"
+    severity: low
+    confidence: medium
+    explanation: "remember_turn pushes onto a Redis list with no expire() and no ltrim() call, so the stored history grows without bound over a long session."
+  - detector: unbounded-agent-memory
+    file: bad_multiagent_shared_memory_unbounded.py
+    owaspLlm: "LLM04:2025"
+    severity: low
+    confidence: low
+    explanation: "The module-level shared_memory list used across all crew agents is appended to on every round with no cap; confidence is lower since it depends on recognizing the crewai hand-off pattern."
+pass:
+  - file: good.py

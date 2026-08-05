@@ -1,0 +1,34 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: llm-output-to-shell-eval
+    file: bad_exec.py
+    owaspLlm: "LLM05:2025"
+    severity: critical
+    confidence: high
+    explanation: "Raw LLM completion is passed directly to exec() with no validation or sandboxing, allowing arbitrary code execution."
+  - detector: llm-output-to-shell-eval
+    file: bad_eval.py
+    owaspLlm: "LLM05:2025"
+    severity: critical
+    confidence: high
+    explanation: "LLM-generated 'expression' is passed directly to eval(), which can execute arbitrary Python via constructs like __import__('os').system(...)."
+  - detector: llm-output-to-shell-eval
+    file: bad_subprocess_shell.py
+    owaspLlm: "LLM05:2025"
+    severity: critical
+    confidence: high
+    explanation: "LLM-produced shell command is run via subprocess.run(..., shell=True) without validation, enabling arbitrary command execution."
+  - detector: llm-output-to-shell-eval
+    file: bad_os_system.py
+    owaspLlm: "LLM05:2025"
+    severity: critical
+    confidence: high
+    explanation: "LLM-produced shell one-liner is passed directly to os.system() with no allowlist or confirmation step."
+  - detector: llm-output-to-shell-eval
+    file: bad_dynamic_plugin.py
+    owaspLlm: "LLM05:2025"
+    severity: high
+    confidence: medium
+    explanation: "LLM-authored module is written to disk and imported/executed immediately with no sandbox, static review, or restricted execution environment."
+pass:
+  - file: good.py

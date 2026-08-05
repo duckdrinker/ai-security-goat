@@ -1,0 +1,34 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: code-exec-tool-without-sandbox
+    file: bad_exec_tool.py
+    owaspLlm: "LLM06:2025"
+    severity: critical
+    confidence: high
+    explanation: "The execute_code tool runs the model-supplied string via exec() against the real globals/builtins of the host process, with no sandbox at all."
+  - detector: code-exec-tool-without-sandbox
+    file: bad_subprocess_shell_tool.py
+    owaspLlm: "LLM06:2025"
+    severity: critical
+    confidence: high
+    explanation: "run_shell_script runs an LLM-authored script via subprocess.run(..., shell=True) directly on the host, with no container or restricted user."
+  - detector: code-exec-tool-without-sandbox
+    file: bad_python_repl_tool.py
+    owaspLlm: "LLM06:2025"
+    severity: critical
+    confidence: medium
+    explanation: "langchain_experimental's PythonREPL is wired straight into the agent's toolset; PythonREPL.run() calls exec() with no sandboxing of its own."
+  - detector: code-exec-tool-without-sandbox
+    file: bad_autogen_local_executor.py
+    owaspLlm: "LLM06:2025"
+    severity: high
+    confidence: high
+    explanation: "UserProxyAgent is configured with LocalCommandLineCodeExecutor instead of the framework's own DockerCommandLineCodeExecutor, so model-generated code blocks run unsandboxed on the host."
+  - detector: code-exec-tool-without-sandbox
+    file: bad_openai_function_call_exec.py
+    owaspLlm: "LLM06:2025"
+    severity: critical
+    confidence: medium
+    explanation: "The run_python function-calling tool executes model-supplied code via compile()+exec() in the same process as the rest of the application, with no isolation or timeout."
+pass:
+  - file: good.py

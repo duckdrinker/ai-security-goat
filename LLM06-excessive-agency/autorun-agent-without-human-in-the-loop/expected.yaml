@@ -1,0 +1,34 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: autorun-agent-without-human-in-the-loop
+    file: bad_file_write_autorun.py
+    owaspLlm: "LLM06:2025"
+    severity: high
+    confidence: high
+    explanation: "AgentExecutor is run with autonomous=True and no approval callback, letting the agent write files to disk unattended across many iterations."
+  - detector: autorun-agent-without-human-in-the-loop
+    file: bad_email_send_autorun.py
+    owaspLlm: "LLM06:2025"
+    severity: high
+    confidence: high
+    explanation: "AutoGen UserProxyAgent is configured with human_input_mode=\"NEVER\" and wired to a real send_email function, so outbound messages fire with no human checkpoint."
+  - detector: autorun-agent-without-human-in-the-loop
+    file: bad_payment_call_autorun.py
+    owaspLlm: "LLM06:2025"
+    severity: critical
+    confidence: medium
+    explanation: "CrewAI agent has unrestricted, unattended access to a refund tool that moves real money, with no approval gate between the LLM's decision and the Stripe call."
+  - detector: autorun-agent-without-human-in-the-loop
+    file: bad_agent_executor_no_callback.py
+    owaspLlm: "LLM06:2025"
+    severity: critical
+    confidence: high
+    explanation: "AgentExecutor has no callbacks/approval handler registered and is given a delete_records tool, so destructive deletes run without any human-in-the-loop step."
+  - detector: autorun-agent-without-human-in-the-loop
+    file: bad_autogen_groupchat_autorun.py
+    owaspLlm: "LLM06:2025"
+    severity: critical
+    confidence: medium
+    explanation: "GroupChat's executor proxy uses human_input_mode=\"NEVER\" and is wired to a deploy_to_production function, so a production rollout can be triggered without human confirmation."
+pass:
+  - file: good.py

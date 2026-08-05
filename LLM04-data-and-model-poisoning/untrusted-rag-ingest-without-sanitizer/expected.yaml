@@ -1,0 +1,34 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: untrusted-rag-ingest-without-sanitizer
+    file: bad_webbaseloader_direct_index.py
+    owaspLlm: "LLM04:2025"
+    severity: high
+    confidence: high
+    explanation: "WebBaseLoader scrapes an arbitrary URL and the resulting docs are passed straight into FAISS.from_documents with no sanitization step in between."
+  - detector: untrusted-rag-ingest-without-sanitizer
+    file: bad_llamaindex_upload_dir.py
+    owaspLlm: "LLM04:2025"
+    severity: high
+    confidence: high
+    explanation: "SimpleDirectoryReader loads every file from a shared user-upload directory and VectorStoreIndex.from_documents indexes them unfiltered."
+  - detector: untrusted-rag-ingest-without-sanitizer
+    file: bad_user_upload_pdf_ingest.py
+    owaspLlm: "LLM04:2025"
+    severity: high
+    confidence: medium
+    explanation: "A Flask upload endpoint saves an arbitrary user-supplied PDF and indexes its extracted text via vectordb.add_documents with no sanitization step."
+  - detector: untrusted-rag-ingest-without-sanitizer
+    file: bad_scrapy_pipeline_to_pinecone.py
+    owaspLlm: "LLM04:2025"
+    severity: critical
+    confidence: medium
+    explanation: "A Scrapy pipeline embeds and upserts raw crawled page bodies into a production Pinecone index on every crawl, with no cleaning stage."
+  - detector: untrusted-rag-ingest-without-sanitizer
+    file: bad_confluence_loader_no_filter.py
+    owaspLlm: "LLM04:2025"
+    severity: high
+    confidence: low
+    explanation: "ConfluenceLoader pulls an external space (including attachments) and indexes it via Qdrant.from_documents with no content filtering; confidence is lower because 'external' trust boundary is implicit."
+pass:
+  - file: good.py

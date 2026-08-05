@@ -1,0 +1,35 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+# Depends on infrastructure (TaintFlowDetector) that may not exist yet — even less likely to fire today than the rest of this category.
+fail:
+  - detector: agent-establishes-persistence
+    file: bad_crontab_write_tool.py
+    owaspLlm: "LLM06:2025"
+    severity: high
+    confidence: medium
+    explanation: "The ensure_agent_persists tool appends an @reboot crontab entry that relaunches the agent's own runner script, giving it unattended cross-session persistence."
+  - detector: agent-establishes-persistence
+    file: bad_systemd_unit_write_tool.py
+    owaspLlm: "LLM06:2025"
+    severity: high
+    confidence: medium
+    explanation: "install_as_service writes a systemd unit file for the agent's own runner and enables it, so the agent is auto-started by the init system on every boot."
+  - detector: agent-establishes-persistence
+    file: bad_windows_task_scheduler_tool.py
+    owaspLlm: "LLM06:2025"
+    severity: high
+    confidence: medium
+    explanation: "schedule_self_relaunch registers a Windows scheduled task via schtasks to relaunch the agent's runner at every logon."
+  - detector: agent-establishes-persistence
+    file: bad_autogen_self_relaunch_function.py
+    owaspLlm: "LLM06:2025"
+    severity: high
+    confidence: low
+    explanation: "keep_available_for_later is a function the assistant can call on its own initiative that installs a cron entry to relaunch the whole agent chat session unattended."
+  - detector: agent-establishes-persistence
+    file: bad_launchagent_plist_write_tool.py
+    owaspLlm: "LLM06:2025"
+    severity: high
+    confidence: medium
+    explanation: "install_launch_agent writes a LaunchAgent plist and loads it with launchctl so launchd relaunches the agent's runner on every login."
+pass:
+  - file: good.py

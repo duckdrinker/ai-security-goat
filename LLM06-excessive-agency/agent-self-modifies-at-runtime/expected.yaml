@@ -1,0 +1,35 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+# Depends on infrastructure (TaintFlowDetector) that may not exist yet — even less likely to fire today than the rest of this category.
+fail:
+  - detector: agent-self-modifies-at-runtime
+    file: bad_agent_patches_own_source.py
+    owaspLlm: "LLM06:2025"
+    severity: high
+    confidence: medium
+    explanation: "self_improve overwrites __file__ (the module defining the agent's own tools) with LLM-generated code while the agent is still running."
+  - detector: agent-self-modifies-at-runtime
+    file: bad_agent_rewrites_own_config.py
+    owaspLlm: "LLM06:2025"
+    severity: high
+    confidence: medium
+    explanation: "update_own_config lets the agent rewrite the settings module its own process imports, based on an LLM-generated suggestion."
+  - detector: agent-self-modifies-at-runtime
+    file: bad_agent_rewrites_system_prompt.py
+    owaspLlm: "LLM06:2025"
+    severity: high
+    confidence: medium
+    explanation: "revise_own_instructions lets the model overwrite the system-prompt file it is loaded from on every turn, with no human review."
+  - detector: agent-self-modifies-at-runtime
+    file: bad_agent_rewrites_own_tool_manifest.py
+    owaspLlm: "LLM06:2025"
+    severity: high
+    confidence: low
+    explanation: "expand_own_permissions lets the agent append entries to the tool-permission manifest it is itself bound by, re-read every turn."
+  - detector: agent-self-modifies-at-runtime
+    file: bad_agent_tunes_own_hyperparameters.py
+    owaspLlm: "LLM06:2025"
+    severity: low
+    confidence: low
+    explanation: "tune_own_settings lets the agent rewrite its own temperature/model settings, picked up on the very next inference call."
+pass:
+  - file: good.py

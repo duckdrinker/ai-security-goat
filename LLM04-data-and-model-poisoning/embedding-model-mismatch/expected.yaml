@@ -1,0 +1,34 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: embedding-model-mismatch
+    file: bad_openai_small_vs_large.py
+    owaspLlm: "LLM04:2025"
+    severity: high
+    confidence: high
+    explanation: "index_documents embeds with text-embedding-3-small while query_index embeds with text-embedding-3-large against the same FAISS index."
+  - detector: embedding-model-mismatch
+    file: bad_openai_index_cohere_query.py
+    owaspLlm: "LLM04:2025"
+    severity: high
+    confidence: high
+    explanation: "index_document embeds with an OpenAI model and query embeds with a Cohere model, comparing vectors from two unrelated embedding spaces in the same Pinecone index."
+  - detector: embedding-model-mismatch
+    file: bad_sentence_transformers_diff_models.py
+    owaspLlm: "LLM04:2025"
+    severity: high
+    confidence: high
+    explanation: "index_documents encodes with all-MiniLM-L6-v2 while search encodes with all-mpnet-base-v2 against the same Chroma collection."
+  - detector: embedding-model-mismatch
+    file: bad_versioned_model_upgrade_query_old.py
+    owaspLlm: "LLM04:2025"
+    severity: high
+    confidence: medium
+    explanation: "reindex_kb uses text-embedding-3-small but legacy_query still uses the deprecated text-embedding-ada-002 against the migrated Weaviate index."
+  - detector: embedding-model-mismatch
+    file: bad_azure_openai_vs_openai_direct.py
+    owaspLlm: "LLM04:2025"
+    severity: low
+    confidence: low
+    explanation: "index_document uses an Azure OpenAI deployment and query uses the direct OpenAI API with the same model name; the mismatch is real but far subtler since the identifiers match."
+pass:
+  - file: good.py

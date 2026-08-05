@@ -1,0 +1,34 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: persistent-context-injection
+    file: bad_pickle_memory_replay.py
+    owaspLlm: "LLM04:2025"
+    severity: critical
+    confidence: high
+    explanation: "pickle.load deserializes a previous session's persisted memory and its messages are appended directly to the new prompt with no revalidation."
+  - detector: persistent-context-injection
+    file: bad_redis_memory_load_raw.py
+    owaspLlm: "LLM04:2025"
+    severity: high
+    confidence: high
+    explanation: "resume_agent loads the raw JSON history from Redis and appends it to the live prompt with no tamper/injection check, then persists it back unchanged."
+  - detector: persistent-context-injection
+    file: bad_file_memory_json_replay.py
+    owaspLlm: "LLM04:2025"
+    severity: high
+    confidence: medium
+    explanation: "load_long_term_memory concatenates stored facts straight into the system prompt on every session with no filtering of what was previously written into the file."
+  - detector: persistent-context-injection
+    file: bad_vectorstore_memory_recall_unfiltered.py
+    owaspLlm: "LLM04:2025"
+    severity: high
+    confidence: medium
+    explanation: "recall_and_respond pastes the top similarity-search memory hits directly into the prompt with no revalidation of previously stored content."
+  - detector: persistent-context-injection
+    file: bad_langchain_entity_memory_persist_reload.py
+    owaspLlm: "LLM04:2025"
+    severity: high
+    confidence: low
+    explanation: "reload_entity_memory merges a persisted entity store back into the live memory with no re-check; confidence is lower since the injection path is one level removed from the final prompt."
+pass:
+  - file: good.py

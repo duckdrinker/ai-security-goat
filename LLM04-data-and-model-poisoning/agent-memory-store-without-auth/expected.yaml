@@ -1,0 +1,19 @@
+fail:
+  - detector: agent-memory-store-without-integrity
+    file: bad_redis_no_password.py
+    owaspLlm: "LLM04:2025"
+    severity: high
+    explanation: "RedisSaver.from_conn_string(\"redis://cache:6379\") — network-reachable LangGraph checkpointer with no authentication in the connection string. Corrected 2026-08-05 (also fixed detector id, was wrongly 'agent-memory-store-without-auth') to use the LangGraph checkpointer/saver pattern (XSaver.from_conn_string + builder.compile(checkpointer=saver)) shown in Xygeni's own detector docs; the original raw redis.Redis(...) client did not fire."
+  - detector: agent-memory-store-without-integrity
+    file: bad_postgres_pgvector_trust_auth.py
+    owaspLlm: "LLM04:2025"
+    severity: high
+    explanation: "PostgresSaver.from_conn_string(...) with an empty password over an open host binding."
+  - detector: agent-memory-store-without-integrity
+    file: bad_mongodb_memory_no_auth.py
+    owaspLlm: "LLM04:2025"
+    severity: high
+    explanation: "MongoDBSaver.from_conn_string(...) with no credentials in the URI."
+pass:
+  - file: good.py
+    explanation: "RedisSaver.from_conn_string with a password sourced from an environment variable — authentication configured, per the docs this produces no finding."

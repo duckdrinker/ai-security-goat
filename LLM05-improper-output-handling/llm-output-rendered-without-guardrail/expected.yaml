@@ -1,0 +1,34 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: llm-output-rendered-without-guardrail
+    file: bad_render_template_string.py
+    owaspLlm: "LLM05:2025"
+    severity: high
+    confidence: high
+    explanation: "LLM output is embedded in a Jinja2 render_template_string() call with no HTML sanitization, allowing reflected XSS and possible SSTI."
+  - detector: llm-output-rendered-without-guardrail
+    file: bad_markup.py
+    owaspLlm: "LLM05:2025"
+    severity: high
+    confidence: high
+    explanation: "flask.Markup() marks unsanitized LLM output as safe, disabling Jinja2 autoescaping before it reaches the template."
+  - detector: llm-output-rendered-without-guardrail
+    file: bad_fstring_html_response.py
+    owaspLlm: "LLM05:2025"
+    severity: high
+    confidence: high
+    explanation: "LLM output is concatenated directly into a hand-built HTML response string with no templating or sanitization, equivalent to an unsafe innerHTML assignment."
+  - detector: llm-output-rendered-without-guardrail
+    file: bad_markdown_raw_html.py
+    owaspLlm: "LLM05:2025"
+    severity: high
+    confidence: medium
+    explanation: "Markdown renderer passes raw inline HTML from the LLM response through unchanged, and the output is served without any sanitizer applied."
+  - detector: llm-output-rendered-without-guardrail
+    file: bad_jinja_autoescape_off.py
+    owaspLlm: "LLM05:2025"
+    severity: high
+    confidence: high
+    explanation: "A standalone Jinja2 Environment with autoescape=False renders LLM output directly into an HTML template with no escaping or sanitization."
+pass:
+  - file: good.py
