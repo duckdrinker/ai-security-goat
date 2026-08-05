@@ -1,0 +1,34 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: privileged-logic-in-system-prompt
+    file: bad_admin_override_phrase.py
+    owaspLlm: "LLM07:2025"
+    severity: high
+    confidence: high
+    explanation: "System prompt hardcodes an admin bypass phrase (ADMIN_OVERRIDE_2026) that grants unrestricted access if the prompt leaks or the phrase is guessed."
+  - detector: privileged-logic-in-system-prompt
+    file: bad_internal_url.py
+    owaspLlm: "LLM07:2025"
+    severity: high
+    confidence: medium
+    explanation: "System prompt embeds an internal-only admin API URL (internal-admin.corp.local) that would be exposed by prompt extraction."
+  - detector: privileged-logic-in-system-prompt
+    file: bad_hardcoded_api_key.py
+    owaspLlm: "LLM07:2025"
+    severity: critical
+    confidence: high
+    explanation: "System prompt contains a hardcoded internal service API key, turning prompt leakage into direct credential theft."
+  - detector: privileged-logic-in-system-prompt
+    file: bad_multiline_template_bypass.py
+    owaspLlm: "LLM07:2025"
+    severity: high
+    confidence: medium
+    explanation: "A bypass token (SUPPORT_BYPASS_777) that disables the content policy is embedded in a prompt assembled from concatenated string fragments."
+  - detector: privileged-logic-in-system-prompt
+    file: bad_config_loaded_prompt_with_secret.py
+    owaspLlm: "LLM07:2025"
+    severity: critical
+    confidence: medium
+    explanation: "System prompt stored in a config dict instructs the model to disclose a live-looking database connection string to any self-identified on-call user."
+pass:
+  - file: good.py

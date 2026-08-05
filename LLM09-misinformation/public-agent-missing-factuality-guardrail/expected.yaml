@@ -1,0 +1,35 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: public-agent-missing-factuality-guardrail
+    file: bad_nemo_guardrails_config_missing_factuality.py
+    owaspLlm: "LLM09:2025"
+    severity: high
+    confidence: medium
+    explanation: "NeMo Guardrails config for a public bot enables input/output moderation rails but never enables the fact-checking/hallucination rail."
+  - detector: public-agent-missing-factuality-guardrail
+    file: bad_langchain_public_agent_no_verifier.py
+    owaspLlm: "LLM09:2025"
+    severity: high
+    confidence: medium
+    explanation: "Public /api/public/chat endpoint wires tools straight to the LLM and back to the user with no factuality or citation guardrail anywhere in the pipeline."
+  - detector: public-agent-missing-factuality-guardrail
+    file: bad_slack_bot_public_channel_no_factcheck.py
+    owaspLlm: "LLM09:2025"
+    severity: high
+    confidence: medium
+    explanation: "Slack bot answering in a public customer-support channel posts the raw LLM completion back with no factuality/citation guardrail."
+  - detector: public-agent-missing-factuality-guardrail
+    file: bad_widget_agent_config_no_guardrails.py
+    owaspLlm: "LLM09:2025"
+    severity: high
+    confidence: low
+    explanation: "Public-facing website widget agent config only lists a profanity-filter guardrail; no factuality/citation guardrail is attached."
+  - detector: public-agent-missing-factuality-guardrail
+    file: bad_public_api_endpoint_anthropic_no_guardrails.py
+    owaspLlm: "LLM09:2025"
+    severity: high
+    confidence: medium
+    explanation: "Unauthenticated public REST endpoint returns the raw Anthropic completion with no fact-checking, citation, or grounding guardrail in between."
+pass:
+  - file: good.py
+  - file: good_verifier_chain.py

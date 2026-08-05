@@ -1,0 +1,44 @@
+# NOTE: unlike inference-call-without-timeout-or-token-cap, this detector's
+# implementation status in the Xygeni AI Security scanner is not confirmed
+# as of this writing. These fixtures encode the intended behavior per the
+# product specs — a scan producing no findings here is itself useful
+# signal about what's not implemented yet, not necessarily a fixture bug.
+
+fail:
+  - detector: vector-search-without-top-k-cap
+    file: bad_pinecone_query_no_top_k.py
+    owaspLlm: "LLM10:2025"
+    severity: low
+    confidence: low
+    explanation: "Pinecone query() has no top_k argument, so the number of results returned is left entirely to the client/server default rather than an explicit, reviewed value."
+
+  - detector: vector-search-without-top-k-cap
+    file: bad_weaviate_absurd_limit.py
+    owaspLlm: "LLM10:2025"
+    severity: low
+    confidence: high
+    explanation: "limit is explicitly set to 100,000 — a value that caps nothing in practice for a typical RAG collection and defeats the purpose of top-k retrieval."
+
+  - detector: vector-search-without-top-k-cap
+    file: bad_qdrant_search_no_limit.py
+    owaspLlm: "LLM10:2025"
+    severity: low
+    confidence: high
+    explanation: "limit is explicitly set to 1,000,000, equivalent to returning the entire collection instead of a bounded top-k result set."
+
+  - detector: vector-search-without-top-k-cap
+    file: bad_chroma_query_no_n_results.py
+    owaspLlm: "LLM10:2025"
+    severity: low
+    confidence: low
+    explanation: "Chroma query() has no n_results argument, so the result size is left to the client default instead of an explicit cap."
+
+  - detector: vector-search-without-top-k-cap
+    file: bad_faiss_search_all_vectors.py
+    owaspLlm: "LLM10:2025"
+    severity: low
+    confidence: medium
+    explanation: "k is computed as index.ntotal, so the search always returns every vector in the index — the size of the result set scales with index size instead of being independently capped."
+
+pass:
+  - file: good.py

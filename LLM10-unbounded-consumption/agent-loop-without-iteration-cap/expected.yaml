@@ -1,0 +1,44 @@
+# NOTE: unlike inference-call-without-timeout-or-token-cap, this detector's
+# implementation status in the Xygeni AI Security scanner is not confirmed
+# as of this writing. These fixtures encode the intended behavior per the
+# product specs — a scan producing no findings here is itself useful
+# signal about what's not implemented yet, not necessarily a fixture bug.
+
+fail:
+  - detector: agent-loop-without-iteration-cap
+    file: bad_manual_while_true_react.py
+    owaspLlm: "LLM10:2025"
+    severity: high
+    confidence: high
+    explanation: "Hand-rolled ReAct loop wrapped in `while True` with no iteration counter and no max-step fallback — the only exit condition depends entirely on the model emitting a specific string."
+
+  - detector: agent-loop-without-iteration-cap
+    file: bad_langgraph_no_recursion_limit.py
+    owaspLlm: "LLM10:2025"
+    severity: high
+    confidence: medium
+    explanation: "LangGraph agent/tools cycle is compiled and invoked with no recursion_limit in the run config, so nothing bounds how many agent<->tools round-trips can occur."
+
+  - detector: agent-loop-without-iteration-cap
+    file: bad_agent_executor_max_iterations_none.py
+    owaspLlm: "LLM10:2025"
+    severity: high
+    confidence: high
+    explanation: "LangChain AgentExecutor's max_iterations is explicitly set to None, disabling the one built-in mechanism meant to cap the reasoning/tool loop."
+
+  - detector: agent-loop-without-iteration-cap
+    file: bad_recursive_agent_step.py
+    owaspLlm: "LLM10:2025"
+    severity: high
+    confidence: medium
+    explanation: "Agent step is implemented as unbounded recursion with no depth parameter and no maximum-depth check, so the number of LLM/tool round-trips is entirely unbounded by application code."
+
+  - detector: agent-loop-without-iteration-cap
+    file: bad_llm_decides_when_to_stop.py
+    owaspLlm: "LLM10:2025"
+    severity: high
+    confidence: medium
+    explanation: "The only stop condition is a `done` flag the model sets itself in its own structured output — there is no independent step counter or max-steps fallback."
+
+pass:
+  - file: good.py

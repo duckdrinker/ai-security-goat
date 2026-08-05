@@ -1,0 +1,35 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: high-stakes-domain-without-grounding-or-citation
+    file: bad_legal_advice_openai.py
+    owaspLlm: "LLM09:2025"
+    severity: high
+    confidence: medium
+    explanation: "System prompt explicitly frames the assistant as a legal advisor and calls the LLM directly with no retrieval step and no instruction to cite sources."
+  - detector: high-stakes-domain-without-grounding-or-citation
+    file: bad_medical_diagnosis_anthropic.py
+    owaspLlm: "LLM09:2025"
+    severity: high
+    confidence: medium
+    explanation: "Medical diagnosis system prompt paired with a direct model call — no medical knowledge base lookup, no instruction to cite sources."
+  - detector: high-stakes-domain-without-grounding-or-citation
+    file: bad_financial_advice_langchain.py
+    owaspLlm: "LLM09:2025"
+    severity: high
+    confidence: medium
+    explanation: "LangChain chain gives financial/investment advice with no retriever step in the chain and no citation requirement in the prompt."
+  - detector: high-stakes-domain-without-grounding-or-citation
+    file: bad_legal_contract_review_azure.py
+    owaspLlm: "LLM09:2025"
+    severity: high
+    confidence: medium
+    explanation: "Azure OpenAI deployment reviews contract clauses (legal advice) directly on raw text, with no clause database lookup or citation instruction."
+  - detector: high-stakes-domain-without-grounding-or-citation
+    file: bad_medical_symptom_checker_google.py
+    owaspLlm: "LLM09:2025"
+    severity: high
+    confidence: medium
+    explanation: "Gemini system_instruction frames the assistant as a medical diagnosis tool; content is generated with no RAG grounding or citation guardrail."
+pass:
+  - file: good_rag_grounding.py
+  - file: good_citation_instruction.py

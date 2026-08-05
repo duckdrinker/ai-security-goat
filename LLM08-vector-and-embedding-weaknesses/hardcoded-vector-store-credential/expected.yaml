@@ -1,0 +1,34 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: hardcoded-vector-store-credential
+    file: bad_pinecone_literal_key.py
+    owaspLlm: "LLM08:2025"
+    severity: high
+    confidence: high
+    explanation: "Pinecone(api_key=...) is passed a literal API key string instead of an environment/secret-manager lookup."
+  - detector: hardcoded-vector-store-credential
+    file: bad_weaviate_literal_apikey.py
+    owaspLlm: "LLM08:2025"
+    severity: high
+    confidence: high
+    explanation: "weaviate.AuthApiKey(api_key=...) is constructed with a literal key string hardcoded in source."
+  - detector: hardcoded-vector-store-credential
+    file: bad_qdrant_literal_apikey.py
+    owaspLlm: "LLM08:2025"
+    severity: high
+    confidence: high
+    explanation: "QdrantClient(api_key=...) receives a literal Qdrant Cloud API key hardcoded in source."
+  - detector: hardcoded-vector-store-credential
+    file: bad_pgvector_literal_password.py
+    owaspLlm: "LLM08:2025"
+    severity: high
+    confidence: high
+    explanation: "psycopg2.connect(password=...) uses a literal database password hardcoded in source."
+  - detector: hardcoded-vector-store-credential
+    file: bad_milvus_literal_credentials.py
+    owaspLlm: "LLM08:2025"
+    severity: high
+    confidence: high
+    explanation: "connections.connect(user=..., password=...) for Milvus uses literal credentials hardcoded in source."
+pass:
+  - file: good.py

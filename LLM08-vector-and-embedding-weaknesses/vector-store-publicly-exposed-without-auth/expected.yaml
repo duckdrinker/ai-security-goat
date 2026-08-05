@@ -1,0 +1,34 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: vector-store-publicly-exposed-without-auth
+    file: bad_pinecone_no_key_no_tls.py
+    owaspLlm: "LLM08:2025"
+    severity: critical
+    confidence: high
+    explanation: "Pinecone client/index built with an http:// host and an empty api_key — index is reachable unauthenticated and unencrypted."
+  - detector: vector-store-publicly-exposed-without-auth
+    file: bad_weaviate_anonymous_http.py
+    owaspLlm: "LLM08:2025"
+    severity: critical
+    confidence: high
+    explanation: "Weaviate client uses a plain HTTP URL with no auth_client_secret, so anonymous access is accepted over an unencrypted channel."
+  - detector: vector-store-publicly-exposed-without-auth
+    file: bad_qdrant_open_binding.py
+    owaspLlm: "LLM08:2025"
+    severity: critical
+    confidence: high
+    explanation: "QdrantClient targets host 0.0.0.0 with https=False and no api_key, exposing every collection to any network peer."
+  - detector: vector-store-publicly-exposed-without-auth
+    file: bad_milvus_no_auth_insecure.py
+    owaspLlm: "LLM08:2025"
+    severity: critical
+    confidence: high
+    explanation: "Milvus connection to a public IP uses secure=False and omits user/password credentials entirely."
+  - detector: vector-store-publicly-exposed-without-auth
+    file: bad_pgvector_trust_auth_no_ssl.py
+    owaspLlm: "LLM08:2025"
+    severity: critical
+    confidence: high
+    explanation: "Postgres/pgvector connection to a public host uses sslmode=disable and an empty password, relying on trust auth."
+pass:
+  - file: good.py

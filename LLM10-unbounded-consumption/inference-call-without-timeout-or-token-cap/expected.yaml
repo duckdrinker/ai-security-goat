@@ -1,0 +1,38 @@
+fail:
+  - detector: inference-call-without-timeout-or-token-cap
+    file: bad_openai_no_max_tokens.py
+    owaspLlm: "LLM10:2025"
+    severity: high
+    confidence: medium
+    explanation: "Inference call has no token cap, no timeout, and no rate-limit / circuit-breaker — a runaway or oversized response has no ceiling (denial of wallet)."
+
+  - detector: inference-call-without-timeout-or-token-cap
+    file: bad_anthropic_no_max_tokens.py
+    owaspLlm: "LLM10:2025"
+    severity: high
+    confidence: medium
+    explanation: "max_tokens is set to 1,000,000 to satisfy the SDK's required parameter without actually bounding the response, and there is no request timeout or rate-limit / circuit-breaker either — the required field is present but functionally not a cap."
+
+  - detector: inference-call-without-timeout-or-token-cap
+    file: bad_requests_post_no_timeout.py
+    owaspLlm: "LLM10:2025"
+    severity: high
+    confidence: high
+    explanation: "Direct HTTP call to an inference endpoint with no timeout= argument and no bound on generated tokens — a slow or wedged backend can hold the request open indefinitely."
+
+  - detector: inference-call-without-timeout-or-token-cap
+    file: bad_langchain_chatopenai_no_limits.py
+    owaspLlm: "LLM10:2025"
+    severity: high
+    confidence: medium
+    explanation: "ChatOpenAI is constructed with no max_tokens and no request_timeout, and the chain has no retry/circuit-breaker around it — the LangChain wrapper is exactly as unbounded as the raw SDK call it wraps."
+
+  - detector: inference-call-without-timeout-or-token-cap
+    file: bad_openai_no_max_tokens.ts
+    owaspLlm: "LLM10:2025"
+    severity: high
+    confidence: medium
+    explanation: "Same pattern as the Python OpenAI case in the JS/TS ecosystem: no max_tokens, no per-request timeout, and no rate-limit / circuit-breaker around the call."
+
+pass:
+  - file: good.py

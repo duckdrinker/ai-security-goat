@@ -1,0 +1,34 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: mixed-tenant-index-without-per-tenant-filter
+    file: bad_pinecone_no_namespace.py
+    owaspLlm: "LLM08:2025"
+    severity: high
+    confidence: high
+    explanation: "index.query() on a shared Pinecone index takes no namespace and no metadata filter, so results span every tenant."
+  - detector: mixed-tenant-index-without-per-tenant-filter
+    file: bad_weaviate_missing_where_tenant.py
+    owaspLlm: "LLM08:2025"
+    severity: high
+    confidence: high
+    explanation: "Weaviate near-vector search has no with_where() clause on customer_id despite the class holding all customers' data."
+  - detector: mixed-tenant-index-without-per-tenant-filter
+    file: bad_qdrant_missing_query_filter.py
+    owaspLlm: "LLM08:2025"
+    severity: high
+    confidence: high
+    explanation: "Qdrant search() omits query_filter on the tenant_id payload field in a collection shared by all tenants."
+  - detector: mixed-tenant-index-without-per-tenant-filter
+    file: bad_pgvector_missing_where_clause.py
+    owaspLlm: "LLM08:2025"
+    severity: high
+    confidence: high
+    explanation: "pgvector nearest-neighbour SQL has no WHERE tenant_id = %s clause despite a tenant_id column existing on the table."
+  - detector: mixed-tenant-index-without-per-tenant-filter
+    file: bad_chroma_missing_where.py
+    owaspLlm: "LLM08:2025"
+    severity: high
+    confidence: high
+    explanation: "Chroma collection.query() has no where={\"workspace_id\": ...} filter on a collection shared by every workspace."
+pass:
+  - file: good.py
