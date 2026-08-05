@@ -1,0 +1,18 @@
+fail:
+  - detector: obfuscation-keyword-in-prompt
+    file: bad_base64_jailbreak.py
+    owaspLlm: "LLM01:2025"
+    severity: low
+    explanation: "A base64 data-URI payload marker (data:text/plain;base64,...) hides a jailbreak instruction in the prompt — matches the OWASP Prompt Injection Prevention Cheat Sheet obfuscation-class signature. Corrected 2026-08-05 to use the exact data-URI marker shown in Xygeni's own detector docs; the original bare-base64-string version did not fire."
+  - detector: obfuscation-keyword-in-prompt
+    file: bad_hex_encoded_payload.py
+    owaspLlm: "LLM01:2025"
+    severity: low
+    explanation: "A hex escape-run (\\x.. sequence) override phrase is embedded in the prompt, evading substring-based moderation checks. Corrected 2026-08-05 to use literal \\x escape runs as documented; the original bare-hex-string version did not fire."
+  - detector: obfuscation-keyword-in-prompt
+    file: bad_zero_width_chars.py
+    owaspLlm: "LLM01:2025"
+    severity: low
+    explanation: "Zero-width space characters (U+200B) are intercalated inside a jailbreak phrase in the prompt, defeating literal keyword matching. Matches the documented unicode-smuggling obfuscation class, but did not fire in the 2026-08-05 real scan (see AISC-051 in the AISC CLI+API ER) — under investigation."
+pass:
+  - file: good.py

@@ -1,0 +1,34 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: multimodal-input-without-sanitization
+    file: bad_vision_image_url_unchecked.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: low
+    explanation: "A user-supplied image URL is passed straight to the vision model with no content-safety check or provenance validation before inference."
+  - detector: multimodal-input-without-sanitization
+    file: bad_vision_base64_upload_unchecked.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: low
+    explanation: "Raw user-uploaded image bytes are handed directly to the vision model with no moderation or embedded-text/QR scan first."
+  - detector: multimodal-input-without-sanitization
+    file: bad_audio_transcription_to_llm_unchecked.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: medium
+    explanation: "Untrusted caller-submitted audio is transcribed and the raw transcript text is fed straight into the LLM prompt with no sanitization."
+  - detector: multimodal-input-without-sanitization
+    file: bad_computer_use_screenshot_unchecked.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: low
+    explanation: "A live screenshot of a third-party page is sent directly to the model with no check for injected on-screen text before it can drive computer-use actions."
+  - detector: multimodal-input-without-sanitization
+    file: bad_video_upload_unchecked.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: low
+    explanation: "A user-uploaded video is referenced directly in the model call with no content-safety screening before inference."
+pass:
+  - file: good.py

@@ -1,0 +1,33 @@
+fail:
+  - detector: prompt-pinned-to-mutable-label
+    file: bad_langfuse_label_production.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: high
+    explanation: "The production prompt is fetched by the mutable Langfuse label \"production\" instead of an immutable version, so anyone promoting a new version silently changes what ships to users."
+  - detector: prompt-pinned-to-mutable-label
+    file: bad_langfuse_label_latest.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: high
+    explanation: "The prompt is fetched by the mutable Langfuse label \"latest\", which resolves to whatever was most recently created, bypassing any review/approval gate."
+  - detector: prompt-pinned-to-mutable-label
+    file: bad_langfuse_get_prompt_no_version.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: medium
+    explanation: "No version or label is passed to get_prompt(), so the SDK implicitly falls back to the mutable \"production\" label."
+  - detector: prompt-pinned-to-mutable-label
+    file: bad_langchain_hub_pull_latest.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: high
+    explanation: "The LangChain Hub prompt is pulled using the mutable \":latest\" tag instead of an immutable commit hash."
+  - detector: prompt-pinned-to-mutable-label
+    file: bad_promptlayer_get_prompt_label.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: high
+    explanation: "The PromptLayer prompt is fetched by the mutable label \"prod\" instead of a pinned version identifier."
+pass:
+  - file: good.py

@@ -1,0 +1,34 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: agent-tool-without-input-guardrail
+    file: bad_agent_send_email_tool.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: medium
+    explanation: "The LLM-generated recipient, subject, and body are passed straight to send_email() with no recipient allow-list or confirmation step."
+  - detector: agent-tool-without-input-guardrail
+    file: bad_agent_run_shell_command_tool.py
+    owaspLlm: "LLM01:2025"
+    severity: critical
+    confidence: medium
+    explanation: "A shell command string composed entirely by the LLM is executed verbatim via subprocess.run(shell=True) with no allow-list or sandboxing."
+  - detector: agent-tool-without-input-guardrail
+    file: bad_agent_execute_sql_tool.py
+    owaspLlm: "LLM01:2025"
+    severity: critical
+    confidence: medium
+    explanation: "An LLM-composed SQL query string is executed directly against the production database with no parameterization or statement allow-list."
+  - detector: agent-tool-without-input-guardrail
+    file: bad_agent_file_delete_tool.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: medium
+    explanation: "A filesystem path chosen entirely by the LLM agent is deleted with no path allow-list, confirmation, or sandbox boundary."
+  - detector: agent-tool-without-input-guardrail
+    file: bad_agent_transfer_funds_tool.py
+    owaspLlm: "LLM01:2025"
+    severity: critical
+    confidence: medium
+    explanation: "Payment amount and destination, both derived by the LLM from free-text user input, are submitted to the payments API with no validation or human confirmation."
+pass:
+  - file: good.py

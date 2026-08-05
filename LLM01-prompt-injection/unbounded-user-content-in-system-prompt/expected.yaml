@@ -1,0 +1,51 @@
+fail:
+  - detector: unbounded-user-content-in-system-prompt
+    file: bad_fstring_interpolation.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: high
+    explanation: "An f-string interpolates raw, unbounded user-controlled text (user_bio) directly into the system prompt with no length cap or sanitization."
+  - detector: unbounded-user-content-in-system-prompt
+    file: bad_string_concat.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: high
+    explanation: "The system prompt is built by concatenating (+) unbounded, unsanitized ticket notes fetched from the database."
+  - detector: unbounded-user-content-in-system-prompt
+    file: bad_format_method.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: high
+    explanation: "str.format() splices unbounded, unsanitized user profile free text into the system prompt template."
+  - detector: unbounded-user-content-in-system-prompt
+    file: bad_jinja2_template_no_escape.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: medium
+    explanation: "A Jinja2 template renders a raw request field into the system prompt; Jinja2 autoescaping targets HTML output, not prompt-injection phrases, and no length cap is applied."
+  - detector: unbounded-user-content-in-system-prompt
+    file: bad_percent_formatting.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: high
+    explanation: "Legacy %-style formatting splices raw, unbounded user preferences into the system prompt with no length cap or sanitization."
+  - detector: unbounded-user-content-in-system-prompt
+    file: bad_nemo_guardrails_present.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: low
+    explanation: "Same inline f-string interpolation as bad_fstring_interpolation.py, but with nemoguardrails (RailsConfig) imported/instantiated in the same file. Confirmed via real scan (2026-08-05): the detector recognizes the nemoguardrails library by name and reduces confidence from medium to low, tagging the finding with properties.guardrail_hint=\"RailsConfig\". It does NOT suppress the finding, create an ai_guardrail asset, or populate relatedAssets."
+  - detector: unbounded-user-content-in-system-prompt
+    file: bad_llm_guard_present.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: low
+    explanation: "Same inline f-string interpolation, but with llm_guard.input_scanners.PromptInjection imported/instantiated in the same file. Confirmed via real scan (2026-08-05): confidence reduced from medium to low, properties.guardrail_hint=\"llm_guard\". Same caveats as above — no suppression, no ai_guardrail asset, no relatedAssets."
+  - detector: unbounded-user-content-in-system-prompt
+    file: bad_guardrails_ai_present.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: medium
+    explanation: "Control case: same inline pattern, but with guardrails-ai (gd.Guard.from_string) instead of nemoguardrails/llm_guard. Confirmed via real scan (2026-08-05): NOT recognized — confidence stays at the default medium, no guardrail_hint property. Only nemoguardrails and llm_guard are currently recognized by name, not guardrails-ai."
+pass:
+  - file: good.py

@@ -1,0 +1,34 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: indirect-injection-sink-without-guardrail
+    file: bad_browsing_tool_raw_html.py
+    owaspLlm: "LLM01:2025"
+    severity: critical
+    confidence: medium
+    explanation: "A browsing tool fetches a URL and passes the raw page text straight into the LLM context, so any instructions embedded in the page (indirect injection) get executed."
+  - detector: indirect-injection-sink-without-guardrail
+    file: bad_rag_chunks_unfiltered.py
+    owaspLlm: "LLM01:2025"
+    severity: critical
+    confidence: medium
+    explanation: "Retrieved RAG document chunks are concatenated straight into the prompt with no content filtering, allowing an attacker-controlled document to inject instructions."
+  - detector: indirect-injection-sink-without-guardrail
+    file: bad_email_tool_raw_body.py
+    owaspLlm: "LLM01:2025"
+    severity: critical
+    confidence: medium
+    explanation: "The raw body of an untrusted, fully attacker-controlled inbound email is passed directly into the LLM prompt with no sanitization."
+  - detector: indirect-injection-sink-without-guardrail
+    file: bad_search_tool_snippets.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: medium
+    explanation: "Raw web-search snippets are returned verbatim as a tool result and fed back into the agent's context with no sanitization of the external content."
+  - detector: indirect-injection-sink-without-guardrail
+    file: bad_pdf_document_loader_unfiltered.py
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: medium
+    explanation: "Text extracted from a user-uploaded PDF is passed directly into the prompt with no content filtering, letting the document's text control the LLM."
+pass:
+  - file: good.py
