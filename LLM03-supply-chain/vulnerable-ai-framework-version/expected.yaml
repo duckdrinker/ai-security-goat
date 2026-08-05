@@ -1,0 +1,35 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: vulnerable-ai-framework-version
+    file: bad_requirements_langchain.txt
+    owaspLlm: "LLM03:2025"
+    severity: critical
+    confidence: high
+    explanation: "langchain==0.0.171 has a known public CVE (CVE-2023-36258, RCE via PALChain exec())."
+  - detector: vulnerable-ai-framework-version
+    file: bad_requirements_transformers.txt
+    owaspLlm: "LLM03:2025"
+    severity: high
+    confidence: high
+    explanation: "transformers==4.29.0 is affected by a known public insecure-deserialization CVE, fixed in later 4.3x releases."
+  - detector: vulnerable-ai-framework-version
+    file: bad_package_json_langchain.json
+    owaspLlm: "LLM03:2025"
+    severity: critical
+    confidence: high
+    explanation: "npm langchain@0.0.148 pins a release with a known public SSRF/RCE-class CVE."
+  - detector: vulnerable-ai-framework-version
+    file: bad_package_json_llamaindex.json
+    owaspLlm: "LLM03:2025"
+    severity: high
+    confidence: medium
+    explanation: "llamaindex@0.1.8 predates upstream fixes for unsafe remote-loader deserialization."
+  - detector: vulnerable-ai-framework-version
+    file: bad_pom_langchain4j.xml
+    owaspLlm: "LLM03:2025"
+    severity: high
+    confidence: medium
+    explanation: "dev.langchain4j:langchain4j-core:0.9.0 predates hardening of default deserialization/remote-loading paths."
+pass:
+  - file: good_requirements.txt
+  - file: good_package.json

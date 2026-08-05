@@ -1,0 +1,6 @@
+# bad_requirements_transformers.txt
+# Triggers vulnerable-ai-framework-version: pins Hugging Face `transformers` to
+# an old release affected by a known public CVE for insecure deserialization
+# when loading checkpoints/config via pickle (CVE-2024-3568 class of issue,
+# fixed in later 4.3x releases).
+transformers==4.29.0

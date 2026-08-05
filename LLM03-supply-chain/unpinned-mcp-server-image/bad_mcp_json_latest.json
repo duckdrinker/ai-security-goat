@@ -1,0 +1,14 @@
+{
+  "//": "bad_mcp_json_latest.json — triggers unpinned-mcp-server-image: the MCP server container image is pinned to the :latest tag, which is mutable and can silently change what code runs.",
+  "mcpServers": {
+    "filesystem-tools": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "mycompany/mcp-server:latest"
+      ]
+    }
+  }
+}

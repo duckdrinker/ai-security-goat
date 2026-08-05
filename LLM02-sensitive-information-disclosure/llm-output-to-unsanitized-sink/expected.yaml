@@ -1,0 +1,35 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: llm-output-to-unsanitized-sink
+    file: bad_print_raw_response.py
+    owaspLlm: "LLM02:2025"
+    severity: high
+    confidence: medium
+    explanation: "The raw LLM response, generated from a prompt containing customer record data, is printed to stdout with no redaction."
+  - detector: llm-output-to-unsanitized-sink
+    file: bad_logger_info_raw_response.py
+    owaspLlm: "LLM02:2025"
+    severity: high
+    confidence: medium
+    explanation: "The raw completion is logged at INFO level without redaction, duplicating any sensitive content into the application's log aggregator."
+  - detector: llm-output-to-unsanitized-sink
+    file: bad_write_response_to_file.py
+    owaspLlm: "LLM02:2025"
+    severity: high
+    confidence: medium
+    explanation: "The raw completion is appended to a plaintext transcript file with no sanitization step."
+  - detector: llm-output-to-unsanitized-sink
+    file: bad_flask_endpoint_return_raw.py
+    owaspLlm: "LLM02:2025"
+    severity: critical
+    confidence: high
+    explanation: "A Flask endpoint returns the raw completion — built from a prompt containing internal account notes — directly in the HTTP response with no sanitization."
+  - detector: llm-output-to-unsanitized-sink
+    file: bad_fastapi_endpoint_return_raw.py
+    owaspLlm: "LLM02:2025"
+    severity: critical
+    confidence: high
+    explanation: "A FastAPI endpoint echoes the raw completion — generated from a prompt containing customer ticket history — back to the caller unfiltered."
+pass:
+  - file: good_redact_before_log.py
+  - file: good_redact_before_http_response.py

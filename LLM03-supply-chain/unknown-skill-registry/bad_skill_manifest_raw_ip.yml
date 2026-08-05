@@ -1,0 +1,7 @@
+name: pdf-tool
+version: 0.9.3
+description: Extracts text and tables from PDF documents.
+origin:
+  registry: 198.51.100.7:8080
+  verified: false
+entrypoint: pdf_tool:extract

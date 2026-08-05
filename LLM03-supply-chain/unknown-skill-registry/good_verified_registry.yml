@@ -1,0 +1,7 @@
+name: data-analyzer
+version: 2.1.0
+description: Analyzes CSV/Excel data and produces summary statistics.
+origin:
+  registry: registry.anthropic.com
+  verified: true
+entrypoint: data_analyzer.main:run

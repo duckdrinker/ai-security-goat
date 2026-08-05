@@ -1,0 +1,35 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: unpinned-mcp-server-image
+    file: bad_mcp_json_latest.json
+    owaspLlm: "LLM03:2025"
+    severity: high
+    confidence: high
+    explanation: "MCP server image is pinned to the mutable :latest tag."
+  - detector: unpinned-mcp-server-image
+    file: bad_mcp_json_no_tag.json
+    owaspLlm: "LLM03:2025"
+    severity: high
+    confidence: high
+    explanation: "No tag given at all — Docker implicitly resolves to :latest."
+  - detector: unpinned-mcp-server-image
+    file: bad_docker_compose_latest.yaml
+    owaspLlm: "LLM03:2025"
+    severity: high
+    confidence: high
+    explanation: "docker-compose service image is pinned to :latest."
+  - detector: unpinned-mcp-server-image
+    file: bad_docker_compose_no_tag.yaml
+    owaspLlm: "LLM03:2025"
+    severity: high
+    confidence: high
+    explanation: "docker-compose service image has no tag, defaulting to :latest."
+  - detector: unpinned-mcp-server-image
+    file: bad_claude_desktop_config_latest.json
+    owaspLlm: "LLM03:2025"
+    severity: high
+    confidence: high
+    explanation: "MCP client config launches the server container from the :latest tag."
+pass:
+  - file: good_mcp_json_pinned.json
+  - file: good_docker_compose_digest.yaml

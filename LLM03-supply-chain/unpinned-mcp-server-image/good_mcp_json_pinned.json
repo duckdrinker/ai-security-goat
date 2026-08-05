@@ -1,0 +1,14 @@
+{
+  "//": "good_mcp_json_pinned.json — mitigated: the MCP server image is pinned to an exact, immutable version tag.",
+  "mcpServers": {
+    "filesystem-tools": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "mycompany/mcp-server:1.4.2"
+      ]
+    }
+  }
+}

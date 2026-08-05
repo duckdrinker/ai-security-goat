@@ -1,0 +1,19 @@
+fail:
+  - detector: skill-name-typosquatting
+    file: bad_gogle_workspace/SKILL.md
+    owaspLlm: "LLM03:2025"
+    severity: high
+    explanation: "SKILL.md front-matter name 'gogle-workspace' is one character off the well-known skill/integration name 'google-workspace' (similarity ~0.94) — the exact example from Xygeni's own detector docs. Corrected 2026-08-05: the original fixtures in this folder tested package-manifest typosquatting (already covered by the separate Malware/npm-PyPI scanner), which is not what this detector inspects. The real target is a near-duplicate name: field in a SKILL.md front-matter block, compared by edit distance against a bundled list of known skill/integration names."
+  - detector: skill-name-typosquatting
+    file: bad_kubernetess/SKILL.md
+    owaspLlm: "LLM03:2025"
+    severity: high
+    explanation: "SKILL.md front-matter name 'kubernetess' is a near-duplicate of 'kubernetes' (extra trailing 's') — also a documented example."
+  - detector: skill-name-typosquatting
+    file: bad_githiib/SKILL.md
+    owaspLlm: "LLM03:2025"
+    severity: high
+    explanation: "SKILL.md front-matter name 'githiib' is a near-duplicate of 'github' (transposed/substituted letters)."
+pass:
+  - file: good_google_workspace/SKILL.md
+    explanation: "Name is an exact match ('google-workspace') — per the docs, an identical name is not flagged."

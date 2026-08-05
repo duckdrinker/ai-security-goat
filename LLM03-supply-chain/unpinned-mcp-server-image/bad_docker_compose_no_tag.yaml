@@ -1,0 +1,9 @@
+# bad_docker_compose_no_tag.yaml
+# Triggers unpinned-mcp-server-image: the mcp-server-web image reference has
+# no tag at all, so Docker implicitly resolves it to :latest at pull time.
+version: "3.9"
+services:
+  mcp-server-web:
+    image: ghcr.io/acme/mcp-web-browser
+    environment:
+      - MCP_PORT=7778

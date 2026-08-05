@@ -1,0 +1,10 @@
+# good_docker_compose_digest.yaml
+# Mitigated: the image is pinned by immutable sha256 digest, the strongest
+# form of pinning — content-addressed, cannot be repointed by re-tagging.
+version: "3.9"
+services:
+  mcp-server:
+    image: ghcr.io/acme/mcp-filesystem@sha256:9c3d1f2e8b7a6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d
+    ports:
+      - "7777:7777"
+    restart: unless-stopped

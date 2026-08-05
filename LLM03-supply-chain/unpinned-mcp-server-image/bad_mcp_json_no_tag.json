@@ -1,0 +1,14 @@
+{
+  "//": "bad_mcp_json_no_tag.json — triggers unpinned-mcp-server-image: no tag at all is given for the image, which Docker resolves to :latest implicitly — same mutability risk as an explicit :latest.",
+  "mcpServers": {
+    "database-tools": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "mycompany/mcp-db-server"
+      ]
+    }
+  }
+}

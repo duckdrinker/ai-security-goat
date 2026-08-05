@@ -1,0 +1,7 @@
+name: invoice-helper
+version: 3.2.1
+description: Helps draft and validate customer invoices.
+origin:
+  registry: gist.github.com
+  verified: false
+entrypoint: invoice_helper:main

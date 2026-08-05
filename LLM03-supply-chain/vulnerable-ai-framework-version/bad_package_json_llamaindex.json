@@ -1,0 +1,8 @@
+{
+  "name": "goat-llm03-llamaindexjs-app",
+  "version": "1.0.0",
+  "description": "Triggers vulnerable-ai-framework-version: pins llamaindex (JS/TS port) to an old pre-hardening release, before known fixes for unsafe remote-loader deserialization were released upstream.",
+  "dependencies": {
+    "llamaindex": "0.1.8"
+  }
+}

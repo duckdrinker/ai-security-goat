@@ -1,0 +1,35 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: pii-dataset-to-external-model
+    file: bad_pandas_openai_finetune.py
+    owaspLlm: "LLM02:2025"
+    severity: critical
+    confidence: high
+    explanation: "Raw employee PII (name, SSN, email) is embedded in fine-tuning examples uploaded to OpenAI without any anonymization."
+  - detector: pii-dataset-to-external-model
+    file: bad_prompt_dataframe_dump.py
+    owaspLlm: "LLM02:2025"
+    severity: critical
+    confidence: high
+    explanation: "An entire patient cohort DataFrame, including PHI (diagnosis, medical_history), is serialized to CSV and dropped verbatim into a prompt sent to an external LLM provider."
+  - detector: pii-dataset-to-external-model
+    file: bad_embeddings_upload.py
+    owaspLlm: "LLM02:2025"
+    severity: high
+    confidence: high
+    explanation: "Customer support transcripts containing emails and phone numbers are sent unredacted to an external embeddings API for vector indexing."
+  - detector: pii-dataset-to-external-model
+    file: bad_sql_export_finetune.py
+    owaspLlm: "LLM02:2025"
+    severity: critical
+    confidence: high
+    explanation: "Patient records (name, DOB, diagnosis, medical_history) are pulled directly from the database and used to build an external fine-tuning dataset with no de-identification."
+  - detector: pii-dataset-to-external-model
+    file: bad_huggingface_dataset_push.py
+    owaspLlm: "LLM02:2025"
+    severity: high
+    confidence: medium
+    explanation: "A raw applicant dataset with names, SSNs and emails is pushed to a public Hugging Face Hub repository with no anonymization step."
+pass:
+  - file: good_finetune.py
+  - file: good_embeddings.py

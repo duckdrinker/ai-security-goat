@@ -1,0 +1,8 @@
+{
+  "name": "goat-llm03-langchainjs-app",
+  "version": "1.0.0",
+  "description": "Triggers vulnerable-ai-framework-version: pins the npm langchain package to an old release with a known public SSRF/RCE-class CVE, fixed in later versions.",
+  "dependencies": {
+    "langchain": "0.0.148"
+  }
+}

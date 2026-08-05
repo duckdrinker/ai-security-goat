@@ -1,0 +1,9 @@
+{
+  "name": "goat-llm03-good-app",
+  "version": "1.0.0",
+  "description": "Mitigated: recent releases of the JS AI frameworks, with no known public CVEs at the time this fixture was written, pinned to exact versions.",
+  "dependencies": {
+    "langchain": "0.3.2",
+    "llamaindex": "0.8.31"
+  }
+}

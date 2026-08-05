@@ -1,0 +1,35 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: provider-trains-on-prompts-by-default
+    file: bad_openai_responses_default_store.py
+    owaspLlm: "LLM02:2025"
+    severity: high
+    confidence: medium
+    explanation: "The Responses API call omits store=False, leaving the provider's default prompt/output retention and product-improvement usage in effect."
+  - detector: provider-trains-on-prompts-by-default
+    file: bad_google_genai_default.py
+    owaspLlm: "LLM02:2025"
+    severity: high
+    confidence: medium
+    explanation: "A standard-tier Generative AI API key is used with no data-governance opt-out, so prompts remain eligible for use in improving the provider's products."
+  - detector: provider-trains-on-prompts-by-default
+    file: bad_cohere_chat_default.py
+    owaspLlm: "LLM02:2025"
+    severity: high
+    confidence: medium
+    explanation: "The Cohere client is used with no data-usage opt-out configured on the client or the request."
+  - detector: provider-trains-on-prompts-by-default
+    file: bad_mistral_default.py
+    owaspLlm: "LLM02:2025"
+    severity: high
+    confidence: medium
+    explanation: "Requests go to the standard La Plateforme tier without the enterprise no-training agreement or a per-request opt-out."
+  - detector: provider-trains-on-prompts-by-default
+    file: bad_selfhosted_llm_gateway_default.py
+    owaspLlm: "LLM02:2025"
+    severity: high
+    confidence: high
+    explanation: "The gateway's training_opt_out flag defaults to False and is never overridden by callers, so prompts containing customer PII are eligible for provider-side training."
+pass:
+  - file: good_openai_store_false.py
+  - file: good_generic_opt_out.py

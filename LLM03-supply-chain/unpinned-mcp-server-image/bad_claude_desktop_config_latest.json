@@ -1,0 +1,18 @@
+{
+  "//": "bad_claude_desktop_config_latest.json — triggers unpinned-mcp-server-image: an MCP client config (Claude Desktop style) launches the server container from the :latest tag.",
+  "mcpServers": {
+    "github-tools": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e", "GITHUB_TOKEN",
+        "ghcr.io/modelcontextprotocol/github-server:latest"
+      ],
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      }
+    }
+  }
+}

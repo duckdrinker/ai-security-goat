@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  bad_pom_langchain4j.xml
+  Triggers vulnerable-ai-framework-version: pins the Java langchain4j-core
+  artifact to a very old 0.x release, predating hardening of its default
+  deserialization and remote-content-loading paths.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example.goat</groupId>
+  <artifactId>llm03-langchain4j-app</artifactId>
+  <version>1.0.0</version>
+  <dependencies>
+    <dependency>
+      <groupId>dev.langchain4j</groupId>
+      <artifactId>langchain4j-core</artifactId>
+      <version>0.9.0</version>
+    </dependency>
+  </dependencies>
+</project>

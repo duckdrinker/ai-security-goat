@@ -1,0 +1,10 @@
+# bad_docker_compose_latest.yaml
+# Triggers unpinned-mcp-server-image: the mcp-server service is deployed from
+# an explicit :latest tag via docker-compose, rather than a pinned version.
+version: "3.9"
+services:
+  mcp-server:
+    image: ghcr.io/acme/mcp-filesystem:latest
+    ports:
+      - "7777:7777"
+    restart: unless-stopped

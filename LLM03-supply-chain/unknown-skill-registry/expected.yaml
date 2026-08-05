@@ -1,0 +1,23 @@
+fail:
+  - detector: skill-pack-from-unknown-registry
+    file: bad_skill_manifest_random_domain.yml
+    owaspLlm: "LLM03:2025"
+    severity: high
+    explanation: "origin.registry is a random third-party domain not in the trusted allowlist, and origin.verified is false. Corrected 2026-08-05 (also fixed detector id, was wrongly 'unknown-skill-registry') to use the exact nested origin: {registry, verified} shape shown in Xygeni's own detector docs; the original flat source_url field did not fire."
+  - detector: skill-pack-from-unknown-registry
+    file: bad_skill_manifest_raw_ip.yml
+    owaspLlm: "LLM03:2025"
+    severity: high
+    explanation: "origin.registry is a raw IP:port with no domain-based provenance signal, origin.verified is false."
+  - detector: skill-pack-from-unknown-registry
+    file: bad_skill_manifest_pastebin.yml
+    owaspLlm: "LLM03:2025"
+    severity: high
+    explanation: "origin.registry is a paste site, not a legitimate package/skill registry, origin.verified is false."
+  - detector: skill-pack-from-unknown-registry
+    file: bad_agent_config_github_gist.yml
+    owaspLlm: "LLM03:2025"
+    severity: high
+    explanation: "origin.registry is a GitHub Gist host, not a trusted skill registry, origin.verified is false."
+pass:
+  - file: good_verified_registry.yml

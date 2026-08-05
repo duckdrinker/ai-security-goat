@@ -1,0 +1,7 @@
+name: log-summarizer
+version: 1.0.0
+description: Summarizes application logs into a daily digest.
+origin:
+  registry: pastebin.com
+  verified: false
+entrypoint: log_summarizer:run

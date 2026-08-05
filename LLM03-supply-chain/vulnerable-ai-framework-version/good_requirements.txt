@@ -1,0 +1,5 @@
+# good_requirements.txt
+# Mitigated: recent releases of both frameworks, with no known public CVEs
+# at the time this fixture was written, pinned to exact versions.
+langchain==0.2.16
+transformers==4.44.2

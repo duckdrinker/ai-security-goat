@@ -1,0 +1,35 @@
+# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+fail:
+  - detector: unsafe-deserializer-on-remote-artifact
+    file: bad_torch_load_requests_content.py
+    owaspLlm: "LLM03:2025"
+    severity: critical
+    confidence: high
+    explanation: "torch.load() is called on HTTP-downloaded bytes without weights_only=True or an integrity check."
+  - detector: unsafe-deserializer-on-remote-artifact
+    file: bad_pickle_load_urlopen.py
+    owaspLlm: "LLM03:2025"
+    severity: critical
+    confidence: high
+    explanation: "pickle.load() is called directly on a remote stream — arbitrary code execution on a crafted artifact."
+  - detector: unsafe-deserializer-on-remote-artifact
+    file: bad_torch_load_download_cache.py
+    owaspLlm: "LLM03:2025"
+    severity: critical
+    confidence: high
+    explanation: "A remotely-downloaded checkpoint is loaded with torch.load() using default (unsafe) deserialization settings."
+  - detector: unsafe-deserializer-on-remote-artifact
+    file: bad_joblib_load_remote.py
+    owaspLlm: "LLM03:2025"
+    severity: critical
+    confidence: medium
+    explanation: "joblib.load() (pickle-based) is called on a remotely-downloaded buffer."
+  - detector: unsafe-deserializer-on-remote-artifact
+    file: bad_torch_hub_load_source_github.py
+    owaspLlm: "LLM03:2025"
+    severity: critical
+    confidence: medium
+    explanation: "torch.hub.load(..., trust_repo=True) executes remote code and unpickles a remote checkpoint with unsafe defaults."
+pass:
+  - file: good_torch_load_weights_only.py
+  - file: good_safetensors_load.py

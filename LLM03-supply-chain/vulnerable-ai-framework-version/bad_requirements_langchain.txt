@@ -1,0 +1,5 @@
+# bad_requirements_langchain.txt
+# Triggers vulnerable-ai-framework-version: pins langchain to a release with a
+# known public CVE (CVE-2023-36258 — arbitrary code execution via
+# PALChain.from_math_prompt(), which calls Python exec() on LLM-generated code).
+langchain==0.0.171
