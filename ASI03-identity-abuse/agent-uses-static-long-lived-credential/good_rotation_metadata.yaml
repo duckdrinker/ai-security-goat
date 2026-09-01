@@ -1,0 +1,14 @@
+# Mitigated: a literal-looking secret is present, but the manifest also
+# declares credential_manager/rotation_policy/ttl metadata for it -- the
+# credential is managed and rotated, not a static long-lived value.
+apiVersion: v1
+kind: Agent
+metadata:
+  name: analytics-agent
+spec:
+  tools:
+    - name: reporting-database
+      connection_string: "postgres://svcreporting:Tr0ub4dor3@prod-db.internal:5432/analytics"
+      credential_manager: "vault"
+      rotation_policy: "30d"
+      ttl: "86400s"

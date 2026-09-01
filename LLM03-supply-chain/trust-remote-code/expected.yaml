@@ -1,0 +1,29 @@
+# xygeni/xygeni-product-backlog#1355, merged xygeni/DepsDoctor#4277.
+# Detector: TrustRemoteCodeDetector, Critical severity, all four libraries.
+fail:
+  - detector: trust-remote-code
+    file: bad_transformers.py
+    owaspLlm: "LLM03:2025"
+    severity: critical
+    confidence: high
+    explanation: "AutoModel.from_pretrained()/AutoTokenizer.from_pretrained() called with trust_remote_code=True, executing arbitrary custom modeling code from the repo at load time."
+  - detector: trust-remote-code
+    file: bad_datasets.py
+    owaspLlm: "LLM03:2025"
+    severity: critical
+    confidence: high
+    explanation: "load_dataset() called with trust_remote_code=True, executing the dataset repo's custom loading script at load time."
+  - detector: trust-remote-code
+    file: bad_sentence_transformers.py
+    owaspLlm: "LLM03:2025"
+    severity: critical
+    confidence: high
+    explanation: "SentenceTransformer() constructed with trust_remote_code=True, executing the repo's custom module code at load time."
+  - detector: trust-remote-code
+    file: bad_diffusers.py
+    owaspLlm: "LLM03:2025"
+    severity: critical
+    confidence: high
+    explanation: "DiffusionPipeline.from_pretrained() called with trust_remote_code=True, executing the repo's custom pipeline code at load time."
+pass:
+  - file: good.py

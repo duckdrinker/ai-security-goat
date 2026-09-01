@@ -1,0 +1,10 @@
+# Mitigated -- see good_agent1_scoped.yaml. Same connection_ref, but scoped.
+apiVersion: v1
+kind: Agent
+metadata:
+  name: refund-processing-agent
+spec:
+  tools:
+    - name: crm-lookup
+      connection_ref: "shared-credentials-prod"
+      scope: "write:refunds"

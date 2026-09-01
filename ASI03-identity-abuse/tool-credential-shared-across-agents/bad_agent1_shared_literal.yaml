@@ -1,0 +1,12 @@
+# bad_agent1_shared_literal.yaml
+# Part 1/2 of a triggering pair: this agent and bad_agent2_shared_literal.yaml
+# both hardcode the same literal connection string, not just the same
+# reference name.
+apiVersion: v1
+kind: Agent
+metadata:
+  name: cache-warmer-agent
+spec:
+  tools:
+    - name: session-cache
+      connection_string: "redis://prod"

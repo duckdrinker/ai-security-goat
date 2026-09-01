@@ -1,0 +1,12 @@
+# bad_hardcoded_connection_string.yaml
+# Triggers agent-uses-static-long-lived-credential: the database connection
+# string embeds a literal username/password with no reference to a secrets
+# manager and no rotation metadata.
+apiVersion: v1
+kind: Agent
+metadata:
+  name: analytics-agent
+spec:
+  tools:
+    - name: reporting-database
+      connection_string: "postgres://svcreporting:Tr0ub4dor3@prod-db.internal:5432/analytics"

@@ -1,6 +1,6 @@
 # ai-security-goat
 
-A deliberately vulnerable AI/LLM codebase, built to validate Xygeni's **AI Security** risk detectors (OWASP LLM Top 10:2025, categories LLM01–LLM10).
+A deliberately vulnerable AI/LLM codebase, built to validate Xygeni's **AI Security** risk detectors. Originally scoped to the OWASP LLM Top 10:2025 (categories LLM01–LLM10); since 2026-08-31 it also covers detectors that map to the OWASP Agentic Security Initiative (ASI) taxonomy instead — non-human-identity and agent-runtime risks that don't fit a single LLM Top 10 category (`ASI0N-*` top-level folders, same structure/conventions as the LLM0N ones).
 
 This project follows the same spirit as [xygeni-goat](https://github.com/xygeni/xygeni-goat) (Xygeni's existing "goat" project for supply-chain issues — SCA, IaC, Secrets), but focused on AI/LLM-specific risks instead. It is currently developed inside the `DepsDoctor-Test` repo for convenience, but is designed to be extracted into its own standalone repository later with no changes required — it has no dependency on anything else in `DepsDoctor-Test` (no references to `TestCases/`, `Karate/`, or any other sibling folder).
 
@@ -25,10 +25,12 @@ ai-security-goat/
 ├── LLM07-system-prompt-leakage/
 ├── LLM08-vector-and-embedding-weaknesses/
 ├── LLM09-misinformation/
-└── LLM10-unbounded-consumption/
+├── LLM10-unbounded-consumption/
+├── ASI03-identity-abuse/
+└── ASI05-unexpected-code-execution/
 ```
 
-Each top-level folder is one OWASP LLM Top 10:2025 category (its own `README.md` lists the specific detectors it covers). Each detector subfolder is self-contained: it can be scanned on its own, or the whole tree can be scanned at once.
+Each top-level folder is one OWASP LLM Top 10:2025 category, or (for the `ASI0N-*` folders) one OWASP Agentic Security Initiative category (its own `README.md` lists the specific detectors it covers). Each detector subfolder is self-contained: it can be scanned on its own, or the whole tree can be scanned at once.
 
 **Note on detector coverage:** as of 2026-07-21, only some of these detectors are confirmed implemented in the Xygeni AI Security scanner (LLM01 and at least part of LLM10 have been observed producing real findings). The rest document the *intended* behavior per the product specs — scanning them today may produce no finding, which is itself useful signal about what's not implemented yet, not a fixture bug. Each `expected.yaml` for an unconfirmed detector says so explicitly.
 

@@ -1,0 +1,10 @@
+# bad_agent2_shared_literal.yaml
+# Part 2/2 of a triggering pair -- see bad_agent1_shared_literal.yaml.
+apiVersion: v1
+kind: Agent
+metadata:
+  name: notification-dispatch-agent
+spec:
+  tools:
+    - name: session-cache
+      connection_string: "redis://prod"

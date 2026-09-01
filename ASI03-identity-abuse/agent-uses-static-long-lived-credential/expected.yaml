@@ -1,0 +1,19 @@
+# xygeni/xygeni-product-backlog#1358, merged xygeni/DepsDoctor#4277 @ e7da1058.
+# Detector: AgentStaticCredentialDetector, severity high / confidence medium.
+# Matched secret values are obfuscated in the real report; not reproduced here.
+fail:
+  - detector: agent-uses-static-long-lived-credential
+    file: bad_hardcoded_api_key.yaml
+    severity: high
+    confidence: medium
+    explanation: "Hardcoded bearer token in the tool's auth field, no credential_manager/ttl/rotation_policy metadata."
+  - detector: agent-uses-static-long-lived-credential
+    file: bad_hardcoded_connection_string.yaml
+    severity: high
+    confidence: medium
+    explanation: "Hardcoded username/password embedded in the connection_string, no rotation metadata."
+pass:
+  - file: good_env_reference.yaml
+  - file: good_rotation_metadata.yaml
+  - file: good_placeholder.yaml.example
+  - file: good_non_manifest.py

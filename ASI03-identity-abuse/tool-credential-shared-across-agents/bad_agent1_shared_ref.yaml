@@ -1,0 +1,12 @@
+# bad_agent1_shared_ref.yaml
+# Part 1/2 of a triggering pair: this agent and bad_agent2_shared_ref.yaml both
+# reference the same connection_ref with no per-agent scope -- if either agent
+# is compromised, the attacker inherits the other's access too.
+apiVersion: v1
+kind: Agent
+metadata:
+  name: support-triage-agent
+spec:
+  tools:
+    - name: crm-lookup
+      connection_ref: "shared-credentials-prod"

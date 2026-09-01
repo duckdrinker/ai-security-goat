@@ -1,0 +1,11 @@
+# Mitigated: shares connection_ref with good_agent2_scoped.yaml, but each
+# declares a per-agent scope narrowing its own access on that connection.
+apiVersion: v1
+kind: Agent
+metadata:
+  name: support-triage-agent
+spec:
+  tools:
+    - name: crm-lookup
+      connection_ref: "shared-credentials-prod"
+      scope: "read-only:tickets"

@@ -1,0 +1,70 @@
+# xygeni/xygeni-product-backlog#1358, merged xygeni/DepsDoctor#4277 @ 599d6ffd.
+# Detector: McpServerPrivilegedDetector, severity high / confidence high.
+#
+# MCP marker CONFIRMED by the dev (2026-08-31): McpServerPrivilegedDetector.MCP_SIGNAL
+# is a case-insensitive regex matched line-by-line against the manifest's own
+# content (no cross-file inference): modelcontextprotocol|\bmcp[-_]?server\b|\bmcp\b
+# -- word-boundary required, so "fastmcp"/"mcpo" do NOT match. Any single
+# matching line anywhere (comment, image name, package install, ENTRYPOINT,
+# ENV, Description=) puts the file in scope. Trap: a well-meant "not an MCP
+# server" comment puts the file back in scope (bit good-non-mcp/Dockerfile
+# here on 2026-08-31, fixed by rewording the comment).
+#
+# File regex gate: (?i).*(dockerfile[^/]*|\.ya?ml|\.service)$ -- Containerfile
+# and .json K8s manifests are never scanned.
+#
+# Scoping limits (also confirmed): docker-compose and Kubernetes evaluate the
+# WHOLE file as one scope (first user:/runAsNonRoot found wins, multi-service/
+# multi-document files are not evaluated per-service/per-document); Dockerfile/
+# systemd take the first USER/User= line, multi-stage Dockerfiles aren't
+# evaluated per stage. Keep one service/document/stage per fixture.
+#
+# Correction (2026-08-31): "USER root # <any comment>" IS suppressed today in
+# the Dockerfile branch only (lines 73-74 of the detector, no keyword
+# required) -- compose/K8s/systemd have no such escape. This is flagged to the
+# dev as inconsistent; pending his decision (drop the Dockerfile escape vs.
+# extend it to the other 3 types) before adding a dedicated test case for it.
+fail:
+  - detector: mcp-server-runs-as-privileged
+    file: dockerfile-no-user/Dockerfile
+    severity: high
+    confidence: high
+    explanation: "No USER directive -- runs as root by default."
+  - detector: mcp-server-runs-as-privileged
+    file: dockerfile-explicit-root/Dockerfile
+    severity: high
+    confidence: high
+    explanation: "Explicit USER root."
+  - detector: mcp-server-runs-as-privileged
+    file: compose-no-user/docker-compose.yml
+    severity: high
+    confidence: high
+    explanation: "No user: field on the service."
+  - detector: mcp-server-runs-as-privileged
+    file: compose-explicit-root/docker-compose.yml
+    severity: high
+    confidence: high
+    explanation: "Explicit user: root."
+  - detector: mcp-server-runs-as-privileged
+    file: k8s-no-runasnonroot/deployment.yaml
+    severity: high
+    confidence: high
+    explanation: "No securityContext.runAsNonRoot or runAsUser anywhere in the pod spec."
+  - detector: mcp-server-runs-as-privileged
+    file: k8s-explicit-root/deployment.yaml
+    severity: high
+    confidence: high
+    explanation: "Explicit securityContext.runAsUser: 0."
+  - detector: mcp-server-runs-as-privileged
+    file: systemd-no-user/mcp-server.service
+    severity: high
+    confidence: high
+    explanation: "No User= directive -- systemd defaults to root."
+  - detector: mcp-server-runs-as-privileged
+    file: systemd-explicit-root/mcp-server.service
+    severity: high
+    confidence: high
+    explanation: "Explicit User=root."
+pass:
+  - file: good-nonroot/Dockerfile
+  - file: good-non-mcp/Dockerfile

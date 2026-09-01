@@ -1,0 +1,10 @@
+# bad_agent2_shared_ref.yaml
+# Part 2/2 of a triggering pair -- see bad_agent1_shared_ref.yaml.
+apiVersion: v1
+kind: Agent
+metadata:
+  name: refund-processing-agent
+spec:
+  tools:
+    - name: crm-lookup
+      connection_ref: "shared-credentials-prod"

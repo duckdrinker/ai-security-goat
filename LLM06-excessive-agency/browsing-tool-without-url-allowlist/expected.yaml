@@ -1,34 +1,83 @@
-# Detector implementation status unconfirmed as of 2026-07-21 — documents intended behavior per spec.
+# Severity confirmed Critical for every match (xygeni/xygeni-product-backlog#1356,
+# merged xygeni/DepsDoctor#4277 @ 3f3689e8).
+#
+# IMPORTANT (found 2026-08-31): the detector only recognizes a function-calling-
+# style tool schema (a TOOLS dict + matching function + call dispatcher, see
+# bad_dict_schema_generic.py) -- it does NOT recognize LangChain Tool.from_function,
+# CrewAI BaseTool subclasses, AutoGen register_function, or the @tool decorator
+# (confirmed with an isolated agent-wired experiment). The 5 legacy bad_*.py
+# fixtures below (pre-dating this ticket) are kept for the OTHER agent-related
+# detectors they do trigger (indirect-injection-sink-without-guardrail,
+# multi-modal-input-without-sanitization, tool-invoking-agent-without-input-
+# guardrail) but produce 0 browsing-tool-without-url-allowlist findings -- this
+# is expected, not a gap in this ticket's coverage.
 fail:
   - detector: browsing-tool-without-url-allowlist
-    file: bad_requests_browse_tool.py
+    file: bad_dict_schema_generic.py
     owaspLlm: "LLM06:2025"
-    severity: high
+    severity: critical
     confidence: high
-    explanation: "The browse_url tool is registered on the agent with an unconstrained url parameter and no allowlist check before requests.get() runs."
+    explanation: "Function-calling-style fetch_url tool with no URL allowlist."
+    properties:
+      url_allowlist: "empty"
   - detector: browsing-tool-without-url-allowlist
-    file: bad_crewai_scrape_tool.py
+    file: bad_metadata_aws_imds.py
     owaspLlm: "LLM06:2025"
-    severity: high
+    severity: critical
     confidence: high
-    explanation: "The CrewAI researcher agent's scrape_page tool has no allowed_domains configuration, so the model can direct the scraper at any host."
+    explanation: "No allowlist; invoked with the AWS/Azure IMDS endpoint (169.254.169.254)."
+    properties:
+      metadata_endpoint: "169.254.169.254"
   - detector: browsing-tool-without-url-allowlist
-    file: bad_autogen_web_function.py
+    file: bad_metadata_ecs_task.py
     owaspLlm: "LLM06:2025"
-    severity: high
+    severity: critical
     confidence: high
-    explanation: "fetch_webpage is registered as an AutoGen function tool with a fully open url argument and no domain/scheme restriction."
+    explanation: "No allowlist; invoked with the ECS task metadata endpoint (169.254.170.2)."
+    properties:
+      metadata_endpoint: "169.254.170.2"
   - detector: browsing-tool-without-url-allowlist
-    file: bad_selenium_navigate_tool.py
+    file: bad_metadata_alibaba.py
     owaspLlm: "LLM06:2025"
-    severity: high
-    confidence: medium
-    explanation: "The navigate_browser tool drives a real Selenium browser to any model-supplied URL with no allowlist of permitted destinations."
+    severity: critical
+    confidence: high
+    explanation: "No allowlist; invoked with the Alibaba Cloud metadata endpoint (100.100.100.200)."
+    properties:
+      metadata_endpoint: "100.100.100.200"
   - detector: browsing-tool-without-url-allowlist
-    file: bad_langchain_requests_toolkit.py
+    file: bad_metadata_gcp.py
     owaspLlm: "LLM06:2025"
-    severity: high
-    confidence: medium
-    explanation: "The agent is loaded with LangChain's requests_all toolkit unmodified, exposing GET/POST/PUT/PATCH/DELETE against arbitrary URLs with allow_dangerous_tools=True and no allowlist."
+    severity: critical
+    confidence: high
+    explanation: "No allowlist; invoked with the GCP metadata endpoint (metadata.google.internal)."
+    properties:
+      metadata_endpoint: "metadata.google.internal"
+  - detector: browsing-tool-without-url-allowlist
+    file: bad_metadata_ipv6.py
+    owaspLlm: "LLM06:2025"
+    severity: critical
+    confidence: high
+    explanation: "No allowlist; invoked with the AWS IMDS IPv6 link-local address (fd00:ec2::254)."
+    properties:
+      metadata_endpoint: "fd00:ec2::254"
+  - detector: browsing-tool-without-url-allowlist
+    file: bad_metadata_allowlist_incomplete.py
+    owaspLlm: "LLM06:2025"
+    severity: critical
+    confidence: high
+    explanation: "A CIDR-range allowlist check is present but scoped to include 169.254.0.0/16 -- still fires. Property observed as url_allowlist=empty rather than present-but-incomplete (the CIDR-membership check isn't recognized as an allowlist attempt), but the Critical-despite-guard behavior is confirmed."
+    properties:
+      metadata_endpoint: "169.254.169.254"
 pass:
+  - file: good_dict_schema_allowlisted.py
   - file: good.py
+
+# Legacy fixtures (pre-dating xygeni-product-backlog#1356): kept for the other
+# agent-related detectors they trigger, produce 0 findings for
+# browsing-tool-without-url-allowlist specifically -- expected, not a gap.
+notApplicable:
+  - file: bad_requests_browse_tool.py
+  - file: bad_crewai_scrape_tool.py
+  - file: bad_autogen_web_function.py
+  - file: bad_selenium_navigate_tool.py
+  - file: bad_langchain_requests_toolkit.py

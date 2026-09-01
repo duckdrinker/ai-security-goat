@@ -1,0 +1,14 @@
+# bad_hardcoded_api_key.yaml
+# Triggers agent-uses-static-long-lived-credential: the tool's auth token is a
+# hardcoded literal, with no credential_manager/ttl/rotation_policy metadata
+# anywhere in the manifest -- if this file leaks, the credential is valid
+# forever with no revocation hook.
+apiVersion: v1
+kind: Agent
+metadata:
+  name: billing-support-agent
+spec:
+  tools:
+    - name: external-billing-api
+      url: "https://api.billing-provider.example.com"
+      auth: "Bearer sk-live-51H8x9K2mN7pQ4rT6vY8wZ1aB3cD5eF7gH9jK"

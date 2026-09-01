@@ -1,0 +1,10 @@
+# Mitigated -- see good_agent1_diff_userinfo.yaml. Same host, different
+# embedded credentials.
+apiVersion: v1
+kind: Agent
+metadata:
+  name: log-shipper-agent
+spec:
+  tools:
+    - name: session-cache
+      connection_string: "redis://log-shipper:kT7mR2v@shared-cache.internal:6379"

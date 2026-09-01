@@ -1,0 +1,11 @@
+# .example file: mitigated. The value is an obvious placeholder in a template
+# file meant to be copied and filled in locally -- not a real credential.
+apiVersion: v1
+kind: Agent
+metadata:
+  name: billing-support-agent
+spec:
+  tools:
+    - name: external-billing-api
+      url: "https://api.billing-provider.example.com"
+      auth: "Bearer changeme"

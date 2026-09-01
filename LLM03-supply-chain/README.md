@@ -4,6 +4,7 @@ This category covers weaknesses in the AI/LLM software supply chain: outdated fr
 
 | Detector | What it flags |
 |---|---|
+| [`trust-remote-code`](./trust-remote-code/) | `from_pretrained()`/`load_dataset()` (transformers, datasets, sentence-transformers, diffusers) called with `trust_remote_code=True`, executing arbitrary custom code shipped inside the model/dataset repo at load time. |
 | [`vulnerable-ai-framework-version`](./vulnerable-ai-framework-version/) | An AI/LLM framework or library pinned to a version with a known public CVE (e.g. an old `langchain`, `transformers`, or `langchain4j` release). |
 | [`unverified-model-source`](./unverified-model-source/) | A model loaded from a URL, raw IP, or unofficial mirror instead of a verified source (HuggingFace Hub repo_id, known registry). |
 | [`unsafe-deserializer-on-remote-artifact`](./unsafe-deserializer-on-remote-artifact/) | `torch.load()`/`pickle.load()`/`joblib.load()` (or equivalent) applied to a remotely-fetched artifact without `weights_only=True`, integrity verification, or a safe format. |

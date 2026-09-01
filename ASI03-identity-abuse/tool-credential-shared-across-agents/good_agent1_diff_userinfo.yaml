@@ -1,0 +1,11 @@
+# Mitigated: same host as good_agent2_diff_userinfo.yaml, but each agent
+# embeds its own distinct credentials (different userinfo) -- not a shared
+# secret, just the same server.
+apiVersion: v1
+kind: Agent
+metadata:
+  name: metrics-collector-agent
+spec:
+  tools:
+    - name: session-cache
+      connection_string: "redis://metrics-collector:pW1x9Zq@shared-cache.internal:6379"

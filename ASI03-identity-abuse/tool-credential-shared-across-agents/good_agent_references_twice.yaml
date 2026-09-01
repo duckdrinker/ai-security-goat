@@ -1,0 +1,13 @@
+# Mitigated: a single agent referencing the same connection_ref from two
+# different tools -- sharing must be ACROSS distinct agents to count, not
+# within one agent's own tool list.
+apiVersion: v1
+kind: Agent
+metadata:
+  name: ops-dashboard-agent
+spec:
+  tools:
+    - name: metrics-reader
+      connection_ref: "ops-dashboard-credentials"
+    - name: alerts-reader
+      connection_ref: "ops-dashboard-credentials"

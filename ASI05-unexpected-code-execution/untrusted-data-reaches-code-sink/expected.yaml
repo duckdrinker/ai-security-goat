@@ -1,0 +1,53 @@
+# xygeni/xygeni-product-backlog#1357, merged xygeni/DepsDoctor#4277
+# (b936a735, aff6dd35, 96e087f0, 16f7a74a).
+# Detector: TaintFlowDetector (id: untrusted-data-reaches-code-sink), Critical,
+# both Phase-1.5a/1.5b and cross-file/JS-TS in scope -- nothing here deferred.
+#
+# Key semantic: AI-specific sources (untrusted_dataset, untrusted_model_source)
+# create NEW findings. Generic sources (user_input/external_input/
+# database_input/decoded_input, e.g. sys.argv/process.argv) only UPGRADE an
+# existing SAST sink-present finding's confidence -- they never create a new
+# one, and produce nothing at all if no SAST finding already exists on that
+# sink.
+#
+# oversizedFile_isExcludedFromAnalysis (AISC-119) has no fixture here: a >5MB
+# file isn't practical to commit. Generate one locally at execution time
+# instead (e.g. a bad_dataset_to_pickle.py padded past 5MB with a comment
+# block) and confirm it's skipped, rather than treating its absence as a gap.
+fail:
+  - detector: untrusted-data-reaches-code-sink
+    file: bad_dataset_to_pickle.py
+    severity: critical
+    confidence: high
+    explanation: "untrusted_dataset source (load_dataset) flows into pickle.loads() in the same file -- new finding."
+  - detector: untrusted-data-reaches-code-sink
+    file: bad_model_source_confirms_deserializer.py
+    severity: critical
+    confidence: high
+    explanation: "untrusted_model_source (hf_hub_download) flows into torch.load(weights_only=False), which the unsafe-deserializer SAST rule already flags -- upgraded to flow-confirmed, no duplicate (flowConfirmsUnsafeDeserializer_upgradesConfidenceNoDuplicate)."
+  - detector: untrusted-data-reaches-code-sink
+    file: bad_argv_confirms_eval.py
+    severity: critical
+    confidence: high
+    explanation: "Generic source (sys.argv) flows into eval(), already flagged by python.code_injection -- upgraded to flow-confirmed, no duplicate (flowConfirmsSinkPresent_upgradesConfidenceNoDuplicate)."
+  - detector: untrusted-data-reaches-code-sink
+    files: [cross_file_a_loader.py, cross_file_b_sink.py]
+    severity: critical
+    confidence: high
+    explanation: "untrusted_dataset source in cross_file_a_loader.py flows into pickle.loads() in cross_file_b_sink.py -- resolved across files (crossFileDatasetToPickle_isFlagged)."
+  - detector: untrusted-data-reaches-code-sink
+    file: bad_js_argv_confirms_eval.js
+    severity: critical
+    confidence: high
+    explanation: "JS generic source (process.argv) confirms an existing eval() SAST finding (jsArgvToEval_confirmsSinkPresent)."
+  - detector: untrusted-data-reaches-code-sink
+    file: bad_ts_argv_confirms_eval.ts
+    severity: critical
+    confidence: high
+    explanation: "Same as bad_js_argv_confirms_eval.js, in TypeScript (typescriptArgvToEval_confirmsSinkPresent)."
+pass:
+  - file: good_generic_source_no_sast_finding.py
+  - file: good_sanitizer_breaks_chain.py
+  - file: good_parameterized_query.py
+  - file: good_constant_sink.py
+  - file: good_js_constant_sink.js

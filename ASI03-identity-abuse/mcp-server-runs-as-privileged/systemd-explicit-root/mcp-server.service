@@ -1,0 +1,13 @@
+# Triggers mcp-server-runs-as-privileged: MCP server systemd unit with an
+# explicit User=root.
+[Unit]
+Description=MCP Tools Server
+After=network.target
+
+[Service]
+User=root
+ExecStart=/usr/bin/python3 -m mcp_server.main
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

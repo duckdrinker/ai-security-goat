@@ -1,0 +1,9 @@
+# Triggers mcp-server-runs-as-privileged: MCP server service with an explicit
+# `user: root`.
+services:
+  mcp-tools-server:
+    image: internal-registry/mcp-tools-server:1.4.0
+    command: ["python", "-m", "mcp_server.main"]
+    user: root
+    ports:
+      - "8765:8765"

@@ -4,6 +4,7 @@ This category covers cases where an application trusts an LLM's output and passe
 
 | Detector | What it flags |
 |---|---|
-| `llm-output-to-shell-eval` | LLM output passed directly to `eval()`/`exec()` or a shell (`subprocess.run(..., shell=True)`, `os.system()`) with no validation — risk of remote code execution. |
-| `llm-output-rendered-without-guardrail` | LLM output rendered as HTML/Markdown without sanitization (e.g. `render_template_string()`, `Markup()`, autoescape disabled) — risk of XSS. |
+| `llm-output-to-shell-eval` | LLM output passed directly to `eval()`/`exec()` or a shell (`subprocess.run(..., shell=True)`, `os.system()`) with no validation — risk of remote code execution. As of xygeni/xygeni-product-backlog#1357 (merged), this detector owns only shell/eval/exec sinks — template-render sinks moved to `template-injection`. |
+| `llm-output-rendered-without-guardrail` | LLM output rendered as HTML/Markdown without sanitization (e.g. `Markup()`, autoescape disabled) — risk of XSS. ⚠️ its `bad_render_template_string.py` fixture may now overlap with `template-injection` (Flask's `render_template_string()` is a documented template-injection sink) — not yet confirmed with the dev whether this detector's scope also changed; don't treat both firing on that file as a bug until confirmed. |
 | `browsing-tool-raw-content-without-url-allowlist` | An agent's browsing/fetch tool requests an arbitrary URL (including one chosen by the LLM itself) with no domain allowlist — risk of SSRF. |
+| [`template-injection`](./template-injection/) | LLM/agent output flows into a template-rendering sink with the template *source itself* attacker-controlled — Jinja2 `Template()`/`env.from_string()`, Flask `render_template_string()`, Mako, Django's bare `Template()`, Handlebars `compile()`, EJS `render()`. Critical severity, RCE-equivalent. |

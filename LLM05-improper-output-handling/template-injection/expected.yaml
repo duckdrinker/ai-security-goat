@@ -1,0 +1,67 @@
+# xygeni/xygeni-product-backlog#1359, merged xygeni/DepsDoctor#4277.
+# Detector: TemplateInjectionDetector (id: template-injection), Critical severity.
+# Both Phase 1 (Jinja2/Mako) and Phase 2 (Django/Handlebars/EJS) are in scope --
+# nothing here is deferred. Template-render sinks were moved OUT of
+# llm-output-to-shell-eval (sibling folder) into this detector -- bad_jinja2_fstring.py
+# should NOT also appear as a finding under llm-output-to-shell-eval (regression check).
+fail:
+  - detector: template-injection
+    file: bad_jinja2_fstring.py
+    owaspLlm: "LLM05:2025"
+    severity: critical
+    confidence: medium
+    explanation: "Untrusted output is interpolated directly into the Jinja2 template string via an f-string, then rendered."
+  - detector: template-injection
+    file: bad_jinja2_from_string.py
+    owaspLlm: "LLM05:2025"
+    severity: critical
+    confidence: medium
+    explanation: "Raw LLM output is compiled as a Jinja2 template via env.from_string()."
+  - detector: template-injection
+    file: bad_flask_render_template_string.py
+    owaspLlm: "LLM05:2025"
+    severity: critical
+    confidence: medium
+    explanation: "Flask's render_template_string() compiles and renders raw LLM output as a Jinja2 template."
+  - detector: template-injection
+    file: bad_mako.py
+    owaspLlm: "LLM05:2025"
+    severity: critical
+    confidence: medium
+    explanation: "The Mako template content itself is built from untrusted LLM output."
+  - detector: template-injection
+    file: bad_django_bare_template.py
+    owaspLlm: "LLM05:2025"
+    severity: critical
+    confidence: medium
+    explanation: "django.template.Template is constructed directly from untrusted LLM output (bare Template(), not a loaded template file)."
+  - detector: template-injection
+    file: bad_handlebars.js
+    owaspLlm: "LLM05:2025"
+    severity: critical
+    confidence: medium
+    explanation: "The first argument to Handlebars.compile() (the template string) is untrusted LLM output."
+  - detector: template-injection
+    file: bad_ejs.js
+    owaspLlm: "LLM05:2025"
+    severity: critical
+    confidence: medium
+    explanation: "The first argument to ejs.render() (the template string) is untrusted LLM output."
+  - detector: template-injection
+    file: bad_two_line_flow.py
+    owaspLlm: "LLM05:2025"
+    severity: critical
+    confidence: medium
+    explanation: "A network fetch's response flows into a Jinja2 template string two statements later."
+  - detector: template-injection
+    file: bad_notebook.ipynb
+    owaspLlm: "LLM05:2025"
+    severity: critical
+    confidence: medium
+    explanation: "Same tainted-template pattern as bad_jinja2_fstring.py, inside a Jupyter notebook code cell."
+pass:
+  - file: good_jinja2_render_context.py
+  - file: good_django_loader.py
+  - file: good_handlebars_context.js
+  - file: good_ejs_context.js
+  - file: good_static_lookalikes.py

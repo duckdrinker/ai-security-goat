@@ -1,0 +1,33 @@
+# xygeni/xygeni-product-backlog#1358, merged xygeni/DepsDoctor#4277 @ 208914f9.
+# Detector: AgentSharedCredentialDetector, severity LOW (not Medium as the ticket
+# said -- the platform's Severity enum has no Medium, Medium maps to low).
+# This detector correlates across manifests, so each finding spans two files --
+# using `files:` (plural) instead of the usual single `file:` key.
+fail:
+  - detector: tool-credential-shared-across-agents
+    files: [bad_agent1_shared_ref.yaml, bad_agent2_shared_ref.yaml]
+    severity: low
+    confidence: medium
+    explanation: "support-triage-agent and refund-processing-agent both reference connection_ref 'shared-credentials-prod' with no per-agent scope."
+  - detector: tool-credential-shared-across-agents
+    files: [bad_agent1_shared_literal.yaml, bad_agent2_shared_literal.yaml]
+    severity: low
+    confidence: medium
+    explanation: "cache-warmer-agent and notification-dispatch-agent both hardcode the literal connection string 'redis://prod'."
+
+# ⚠️ CONFIRMED GAP (2026-08-31, re-tested with fully unique agent names/host,
+# ruling out fixture contamination): same-host-different-userinfo is NOT
+# suppressed -- the detector compares connections by host only, ignoring
+# embedded credentials. Contradicts the dev's description ("suppressed for...
+# same host with different userinfo"). Report as a defect.
+fail_unexpected:
+  - detector: tool-credential-shared-across-agents
+    files: [good_agent1_diff_userinfo.yaml, good_agent2_diff_userinfo.yaml]
+    severity: low
+    confidence: medium
+    explanation: "metrics-collector-agent and log-shipper-agent share host redis://shared-cache.internal:6379 with distinct per-agent userinfo -- should be suppressed per the ticket, is not."
+
+pass:
+  - file: good_agent1_scoped.yaml
+  - file: good_agent2_scoped.yaml
+  - file: good_agent_references_twice.yaml
