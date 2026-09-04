@@ -19,11 +19,14 @@
 # systemd take the first USER/User= line, multi-stage Dockerfiles aren't
 # evaluated per stage. Keep one service/document/stage per fixture.
 #
-# Correction (2026-08-31): "USER root # <any comment>" IS suppressed today in
-# the Dockerfile branch only (lines 73-74 of the detector, no keyword
-# required) -- compose/K8s/systemd have no such escape. This is flagged to the
-# dev as inconsistent; pending his decision (drop the Dockerfile escape vs.
-# extend it to the other 3 types) before adding a dedicated test case for it.
+# Resolved (2026-09-02, xygeni/DepsDoctor#4325): the "any comment suppresses"
+# behavior above was a regression, now fixed. USER root in a Dockerfile is
+# suppressed ONLY by an explicit justification marker with text on the same
+# line: (?i)#\s*(?:justification|justified|reason)\s*:\s*\S -- "justification:",
+# "justified:" or "reason:", case-insensitive, at least one non-space char
+# after the colon. A bare comment or an empty marker does not suppress. The
+# escape stays Dockerfile-only -- compose/K8s/systemd never get it, even with
+# the same marker text.
 fail:
   - detector: mcp-server-runs-as-privileged
     file: dockerfile-no-user/Dockerfile
@@ -65,6 +68,22 @@ fail:
     severity: high
     confidence: high
     explanation: "Explicit User=root."
+  - detector: mcp-server-runs-as-privileged
+    file: dockerfile-root-bare-comment/Dockerfile
+    severity: high
+    confidence: high
+    explanation: "USER root with a trailing comment that carries no justification marker -- a bare comment does not suppress (regression check)."
+  - detector: mcp-server-runs-as-privileged
+    file: dockerfile-root-empty-justification/Dockerfile
+    severity: high
+    confidence: high
+    explanation: "USER root with a justification marker but no text after the colon -- an empty marker does not suppress."
+  - detector: mcp-server-runs-as-privileged
+    files: [justification-marker-scoped-to-dockerfile/docker-compose.yml, justification-marker-scoped-to-dockerfile/deployment.yaml, justification-marker-scoped-to-dockerfile/mcp-server.service]
+    severity: high
+    confidence: high
+    explanation: "Same justification marker as the Dockerfile case, but on compose/K8s/systemd -- the escape is Dockerfile-only, so all 3 still fire (1 finding each)."
 pass:
   - file: good-nonroot/Dockerfile
   - file: good-non-mcp/Dockerfile
+  - file: dockerfile-root-with-justification/Dockerfile

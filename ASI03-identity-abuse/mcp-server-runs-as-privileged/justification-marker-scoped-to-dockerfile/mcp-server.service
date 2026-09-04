@@ -1,0 +1,14 @@
+# Triggers mcp-server-runs-as-privileged: MCP server systemd unit running as
+# root, carrying the same justification marker that suppresses the Dockerfile
+# USER root case -- must NOT be suppressed here, the escape is Dockerfile-only.
+[Unit]
+Description=MCP Tools Server
+After=network.target
+
+[Service]
+User=root # justification: needs root
+ExecStart=/usr/bin/python3 -m mcp_server.main
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
