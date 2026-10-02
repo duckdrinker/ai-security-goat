@@ -1,7 +1,7 @@
 """
 Reads patient medical records into a DataFrame and drops the raw rows straight
 into a prompt sent to Anthropic's API for a "cohort summary" — PHI leaves the
-org with no de-identification. Triggers pii-dataset-to-external-model.
+org with no de-identification. Triggers pii-dataset-into-external-model.
 """
 import anthropic
 import pandas as pd

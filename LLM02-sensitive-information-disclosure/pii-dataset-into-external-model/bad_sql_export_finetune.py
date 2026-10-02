@@ -1,7 +1,7 @@
 """
 Queries a hospital database directly for patient medical_history and feeds the
 raw rows into a fine-tuning dataset uploaded to OpenAI. Triggers
-pii-dataset-to-external-model via a DB-backed dataset instead of a flat file.
+pii-dataset-into-external-model via a DB-backed dataset instead of a flat file.
 """
 import json
 

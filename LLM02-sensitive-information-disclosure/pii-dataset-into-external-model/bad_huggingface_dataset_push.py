@@ -1,7 +1,7 @@
 """
 Loads a raw applicant-tracking dataset (names, emails, SSNs) with the
 `datasets` library and pushes it straight to the Hugging Face Hub to share
-with an external fine-tuning pipeline. Triggers pii-dataset-to-external-model:
+with an external fine-tuning pipeline. Triggers pii-dataset-into-external-model:
 no anonymization before the dataset leaves the org onto a third-party hosting
 platform.
 """

@@ -1,6 +1,6 @@
 """
 Loads a raw HR dataset containing PII (name, SSN, email) and uses it directly to
-build an OpenAI fine-tuning file. Triggers pii-dataset-to-external-model: the
+build an OpenAI fine-tuning file. Triggers pii-dataset-into-external-model: the
 dataset is uploaded to an external provider (OpenAI) with no anonymization step.
 """
 import json

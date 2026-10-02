@@ -1,7 +1,7 @@
 """
 Pushes raw customer support transcripts (containing emails and phone numbers)
 to OpenAI's embeddings API to build a vector index for semantic search, without
-anonymizing the text first. Triggers pii-dataset-to-external-model because the
+anonymizing the text first. Triggers pii-dataset-into-external-model because the
 raw PII-laden text is sent to an external embeddings provider.
 """
 import pandas as pd
