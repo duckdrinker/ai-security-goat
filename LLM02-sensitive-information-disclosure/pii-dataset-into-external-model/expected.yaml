@@ -2,6 +2,16 @@
 # Update 2026-10-02: confirmed implemented by the dev (xygeni-product-backlog#1147), and PII/PCI/PHI
 # harmonization dev-validated against a compiled build of xygeni/DepsDoctor#4496 (not merged yet).
 # Findings now carry a `dataset_sensitivity` property (PII/PCI/PHI) alongside the existing fields.
+# Update 2026-10-05: #4496 merged, confirmed live in xygeni v6.20.0. Re-ran all six fixtures --
+# only bad_iban_cvv_dataset.py (pd.read_parquet) fires with the new vocabulary; the three using
+# datasets.load_dataset() (bad_passport_dob_dataset.py, bad_mrn_ehr_dataset.py,
+# bad_explicit_pii_classification.py) still produce 0 findings, confirmed in isolation. Root cause
+# isolated with a same-sink/changed-accessor control: swapping only the loader to
+# pd.read_csv() makes all three fire correctly (see the *_pandas_loader.py fixtures below) --
+# the new vocabulary/marker recognition is wired for pandas-style loaders only, not for
+# datasets.load_dataset(). The legacy literal "pii" substring match still works through
+# load_dataset() (confirmed against the detector doc's own example), so this is specific to the
+# new vocabulary path, not a load_dataset() regression in general.
 fail:
   - detector: pii-dataset-into-external-model
     file: bad_pandas_openai_finetune.py
@@ -47,32 +57,53 @@ fail:
     severity: critical
     confidence: high
     dataset_sensitivity: PII
-    explanation: "Dataset filename encodes passport/DOB -- personal PII terms from the shared sensitivity catalog, invisible to the old bespoke regex -- fed to an external model with data_sharing_mode=train_on_prompts."
+    explanation: "Dataset filename encodes passport/DOB -- personal PII terms from the shared sensitivity catalog, invisible to the old bespoke regex -- fed to an external model with data_sharing_mode=train_on_prompts. CONFIRMED GAP (2026-10-05, v6.20.0): 0 findings via datasets.load_dataset(), isolated. See bad_passport_dob_dataset_pandas_loader.py for the same scenario working via pandas."
   - detector: pii-dataset-into-external-model
     file: bad_iban_cvv_dataset.py
     owaspLlm: "LLM02:2025"
     severity: critical
     confidence: high
     dataset_sensitivity: PCI
-    explanation: "Dataset filename encodes IBAN/CVV -- financial PII terms from the shared sensitivity catalog, invisible to the old bespoke regex -- fed to an external model with data_sharing_mode=train_on_prompts."
+    explanation: "Dataset filename encodes IBAN/CVV -- financial PII terms from the shared sensitivity catalog, invisible to the old bespoke regex -- fed to an external model with data_sharing_mode=train_on_prompts. CONFIRMED WORKING (2026-10-05, v6.20.0): dataset_sensitivity=PCI, via pd.read_parquet()."
   - detector: pii-dataset-into-external-model
     file: bad_mrn_ehr_dataset.py
     owaspLlm: "LLM02:2025"
     severity: critical
     confidence: high
     dataset_sensitivity: PHI
-    explanation: "Dataset filename encodes MRN/EHR -- health PII terms beyond the old bespoke regex's patient|medical|health_record vocabulary -- fed to an external model with data_sharing_mode=train_on_prompts."
+    explanation: "Dataset filename encodes MRN/EHR -- health PII terms beyond the old bespoke regex's patient|medical|health_record vocabulary -- fed to an external model with data_sharing_mode=train_on_prompts. CONFIRMED GAP (2026-10-05, v6.20.0): 0 findings via datasets.load_dataset(), isolated. See bad_mrn_ehr_dataset_pandas_loader.py for the same scenario working via pandas."
   - detector: pii-dataset-into-external-model
     file: bad_explicit_pii_classification.py
     owaspLlm: "LLM02:2025"
     severity: critical
     confidence: high
     dataset_sensitivity: PII
-    explanation: "Control positive via the old regex's classification: pii trailing comment. Must keep triggering after the harmonization refactor; a regression here would mean the refactor narrowed detection instead of widening it."
+    explanation: "Control positive via the old regex's classification: pii trailing comment. Must keep triggering after the harmonization refactor; a regression here would mean the refactor narrowed detection instead of widening it. CONFIRMED GAP (2026-10-05, v6.20.0): 0 findings via datasets.load_dataset(), isolated. See bad_explicit_pii_classification_pandas_loader.py for the same scenario working via pandas."
+  - detector: pii-dataset-into-external-model
+    file: bad_passport_dob_dataset_pandas_loader.py
+    owaspLlm: "LLM02:2025"
+    severity: critical
+    confidence: high
+    dataset_sensitivity: PII
+    explanation: "Same as bad_passport_dob_dataset.py but loaded via pd.read_csv() instead of datasets.load_dataset(). CONFIRMED WORKING (2026-10-05, v6.20.0) -- isolates the gap to the load_dataset() loader shape specifically, not the passport/DOB vocabulary."
+  - detector: pii-dataset-into-external-model
+    file: bad_mrn_ehr_dataset_pandas_loader.py
+    owaspLlm: "LLM02:2025"
+    severity: critical
+    confidence: high
+    dataset_sensitivity: PHI
+    explanation: "Same as bad_mrn_ehr_dataset.py but loaded via pd.read_csv() instead of datasets.load_dataset(). CONFIRMED WORKING (2026-10-05, v6.20.0) -- isolates the gap to the load_dataset() loader shape specifically, not the MRN/EHR vocabulary."
+  - detector: pii-dataset-into-external-model
+    file: bad_explicit_pii_classification_pandas_loader.py
+    owaspLlm: "LLM02:2025"
+    severity: critical
+    confidence: high
+    dataset_sensitivity: PII
+    explanation: "Same as bad_explicit_pii_classification.py but loaded via pd.read_csv() instead of datasets.load_dataset(). CONFIRMED WORKING (2026-10-05, v6.20.0) -- isolates the gap to the load_dataset() loader shape specifically, not the classification: pii marker."
 pass:
   - file: good_finetune.py
   - file: good_embeddings.py
   - file: good_no_sensitive_dataset.py
-    note: "Negative control -- no sensitive term anywhere. Guards against false positives from widening the shared sensitivity vocabulary. Confirmed correct (no finding) both before and after #4496."
+    note: "Negative control -- no sensitive term anywhere. Guards against false positives from widening the shared sensitivity vocabulary. Confirmed correct (no finding) before #4496, after #4496 merged, and again on v6.20.0 (2026-10-05)."
   - file: good_pii_dataset_optout.py
-    note: "Negative context -- same newly-recognized PII terms as bad_passport_dob_dataset.py, but data_sharing_mode=opt_out. Must not trigger. Confirmed correct (no finding) both before and after #4496."
+    note: "Negative context -- same newly-recognized PII terms as bad_passport_dob_dataset.py, but data_sharing_mode=opt_out. Must not trigger. Confirmed correct (no finding) before #4496, after #4496 merged, and again on v6.20.0 (2026-10-05) -- note this fixture uses load_dataset(), so it doesn't independently confirm the opt-out path recognizes the new vocabulary, only that no false positive occurs."
