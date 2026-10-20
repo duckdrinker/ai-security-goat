@@ -48,6 +48,12 @@ fail:
     severity: critical
     confidence: medium
     explanation: "An openai-go loop executes every refund tool call the model returns, with no approval gate between the model decision and the money movement. Added for xygeni-product-backlog#2244 (Go). Not detected by this detector in the 2026-10-20 scan with 6.21.0 (recursive-agent-without-iteration-cap does fire on the loop)."
+  - detector: autorun-agent-without-human-in-the-loop
+    file: bad_java_langchain4j_supervisor_email_tools.java
+    owaspLlm: "LLM06:2025"
+    severity: high
+    confidence: medium
+    explanation: "A langchain4j supervisor agent orchestrates sub-agents that hold the OrganizingTools (send email, schedule interview) with no approval step before the side effect. Derived from langchain4j-examples agentic-tutorial _7a_Supervisor_Orchestration (xygeni-product-backlog#2244). Not detected in Scanner 6.21.0, 2026-10-20 by this detector (tool-invoking-agent-without-input-guardrail does fire on the same file)."
 pass:
   - file: good.py
   - file: good_java_langchain4j_email_with_approval.java

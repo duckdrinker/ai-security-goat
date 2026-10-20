@@ -30,6 +30,19 @@ fail:
     severity: high
     confidence: high
     explanation: "MCP client config launches the server container from the :latest tag."
+  - detector: mcp-server-image-unpinned
+    file: bad_java_langchain4j_stdio_docker_mcp_git.java
+    owaspLlm: "LLM03:2025"
+    severity: high
+    confidence: medium
+    explanation: "The MCP server is started with docker run mcp/git: no tag and no digest, so the image can change under the application. Derived from langchain4j-examples mcp-github-example McpGithubToolsExample (xygeni-product-backlog#2244). Not detected: the fileRegex of this detector in Scanner 6.21.0, 2026-10-20 only accepts mcp.json, compose/values/agents YAML and Dockerfiles, so Java and Kotlin sources are not analysed."
+  - detector: mcp-server-image-unpinned
+    file: bad_kotlin_langchain4j_stdio_docker_mcp_git.kt
+    owaspLlm: "LLM03:2025"
+    severity: high
+    confidence: medium
+    explanation: "Kotlin version: StdioMcpTransport starts docker run mcp/git with no tag or digest. Derived from langchain4j-examples mcp-github-example (xygeni-product-backlog#2244). Not detected: the fileRegex of this detector in Scanner 6.21.0, 2026-10-20 only accepts mcp.json, compose/values/agents YAML and Dockerfiles, so Java and Kotlin sources are not analysed."
 pass:
   - file: good_mcp_json_pinned.json
   - file: good_docker_compose_digest.yaml
+  - file: good_java_langchain4j_stdio_docker_mcp_git_pinned.java

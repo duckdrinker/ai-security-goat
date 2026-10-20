@@ -52,6 +52,19 @@ fail:
     owaspLlm: "LLM01:2025"
     severity: high
     confidence: medium
-    explanation: "A candidate CV is concatenated into the system prompt with no length bound or delimiting. Added for xygeni-product-backlog#2244. Not detected in the scan (6.21.0, 2026-10-20)."
+    explanation: "A candidate CV is concatenated into the system prompt with no length bound or delimiting. Added for xygeni-product-backlog#2244. Not detected in the scan (6.21.0, 2026-10-20): the fileRegex of this detector does not include .java, .kt or .go, so those sources are not analysed."
+  - detector: unbounded-user-content-in-system-prompt
+    file: bad_java_langchain4j_systemmessage_template_cv.java
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: medium
+    explanation: "The master CV supplied by the user is injected into the @SystemMessage template through {{masterCv}}, giving untrusted, unbounded content the weight of system instructions. Derived from langchain4j-examples agentic-tutorial CvTailor (xygeni-product-backlog#2244). Not detected: the fileRegex of this detector in Scanner 6.21.0, 2026-10-20 does not include .java or .kt, so these files are not analysed."
+  - detector: unbounded-user-content-in-system-prompt
+    file: bad_kotlin_langchain4j_systemmessage_template_cv.kt
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: medium
+    explanation: "Kotlin version of the CvTailor template: the user CV goes into the @SystemMessage via {{masterCv}}. Derived from langchain4j-examples agentic-tutorial CvTailor (xygeni-product-backlog#2244). Not detected: the fileRegex of this detector in Scanner 6.21.0, 2026-10-20 does not include .java or .kt, so these files are not analysed."
 pass:
   - file: good.py
+  - file: good_java_langchain4j_cv_in_user_message.java

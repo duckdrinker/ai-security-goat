@@ -30,5 +30,23 @@ fail:
     severity: high
     confidence: medium
     explanation: "Text extracted from a user-uploaded PDF is passed directly into the prompt with no content filtering, letting the document's text control the LLM."
+  - detector: indirect-injection-sink-without-guardrail
+    file: bad_java_langchain4j_web_search_rag.java
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: medium
+    explanation: "Raw web search results from Tavily are injected into the prompt by a RetrievalAugmentor with no filtering of hostile content. Derived from langchain4j-examples rag-examples _08_Advanced_RAG_Web_Search_Example (xygeni-product-backlog#2244). Not detected in Scanner 6.21.0, 2026-10-20, although the detector accepts this extension."
+  - detector: indirect-injection-sink-without-guardrail
+    file: bad_java_langchain4j_mcp_tool_provider.java
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: medium
+    explanation: "Tools served by a remote MCP server are handed to the agent through McpToolProvider and their output flows back into the model with no guardrail. Derived from langchain4j-examples mcp-example McpToolsExampleOverHttp (xygeni-product-backlog#2244). Not detected in Scanner 6.21.0, 2026-10-20, although the detector accepts this extension."
+  - detector: indirect-injection-sink-without-guardrail
+    file: bad_java_langchain4j_sparql_result_into_prompt.java
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: medium
+    explanation: "The abstract fetched from the public DBpedia SPARQL endpoint is interpolated into a second prompt with no sanitising, so a hostile wiki page can steer the model. Derived from langchain4j-examples dbpedia-example DbPediaSparqlExample (xygeni-product-backlog#2244). Not detected in Scanner 6.21.0, 2026-10-20, although the detector accepts this extension."
 pass:
   - file: good.py

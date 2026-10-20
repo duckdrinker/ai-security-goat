@@ -62,7 +62,7 @@ fail:
     owaspLlm: "LLM05:2025"
     severity: critical
     confidence: medium
-    explanation: "Kotlin equivalent: ChatModel.chat output reaches Runtime.exec. Added for xygeni-product-backlog#2244. Not detected in the scan (6.21.0, 2026-10-20)."
+    explanation: "Kotlin equivalent: ChatModel.chat output reaches Runtime.exec. Added for xygeni-product-backlog#2244. Not detected in the scan (6.21.0, 2026-10-20): the fileRegex of this detector accepts .java and .go but not .kt, so Kotlin sources are not analysed."
   - detector: untrusted-data-reaches-code-sink
     file: bad_go_goopenai_output_to_shell.go
     owaspLlm: "LLM05:2025"
@@ -81,6 +81,18 @@ fail:
     severity: critical
     confidence: medium
     explanation: "An anthropic-sdk-go message is passed to exec.Command("sh", "-c", ...). Added for xygeni-product-backlog#2244. Detected with 6.21.0, 2026-10-20."
+  - detector: untrusted-data-reaches-code-sink
+    file: bad_java_jena_sparql_from_model_output.java
+    owaspLlm: "LLM05:2025"
+    severity: critical
+    confidence: medium
+    explanation: "The subject extracted by the model is concatenated into a SPARQL query executed against a remote endpoint. Derived from langchain4j-examples dbpedia-example (extractSubject then executeSparqlQuery) (xygeni-product-backlog#2244). Not detected in Scanner 6.21.0, 2026-10-20, although the detector accepts this extension."
+  - detector: untrusted-data-reaches-code-sink
+    file: bad_java_langchain4j_sql_database_content_retriever.java
+    owaspLlm: "LLM05:2025"
+    severity: high
+    confidence: medium
+    explanation: "SqlDatabaseContentRetriever lets the model write the SQL that is run against the database; the library only checks that it is a SELECT. Derived from langchain4j-examples rag-examples _10_Advanced_RAG_SQL_Database_Retreiver_Example (xygeni-product-backlog#2244). Not detected in Scanner 6.21.0, 2026-10-20, although the detector accepts this extension."
 pass:
   - file: good_generic_source_no_sast_finding.py
   - file: good_sanitizer_breaks_chain.py

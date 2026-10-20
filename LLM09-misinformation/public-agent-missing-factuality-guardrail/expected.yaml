@@ -30,6 +30,12 @@ fail:
     severity: high
     confidence: medium
     explanation: "Unauthenticated public REST endpoint returns the raw Anthropic completion with no fact-checking, citation, or grounding guardrail in between."
+  - detector: factuality-guardrail-missing-public-surface
+    file: bad_java_langchain4j_aiservice_rest_controller/CustomerSupportAgentController.java
+    owaspLlm: "LLM09:2025"
+    severity: medium
+    confidence: medium
+    explanation: "A Spring @RestController exposes an @AiService interface to anonymous callers with no guardrail on the system prompt or the answers. Derived from langchain4j-examples customer-support-agent-example (xygeni-product-backlog#2244). Not detected in Scanner 6.21.0, 2026-10-20, although the detector accepts .java: the agent is an @AiService interface injected into the controller."
 pass:
   - file: good.py
   - file: good_verifier_chain.py
