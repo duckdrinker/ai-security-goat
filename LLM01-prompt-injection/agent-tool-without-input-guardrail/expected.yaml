@@ -30,5 +30,49 @@ fail:
     severity: critical
     confidence: medium
     explanation: "Payment amount and destination, both derived by the LLM from free-text user input, are submitted to the payments API with no validation or human confirmation."
+  - detector: tool-invoking-agent-without-input-guardrail
+    file: bad_java_langchain4j_tools_no_guardrail.java
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: medium
+    explanation: "A langchain4j AiServices agent exposes an email tool behind a public REST endpoint with no input guardrail. Added for xygeni-product-backlog#2244 (Java). Detected with 6.21.0."
+  - detector: tool-invoking-agent-without-input-guardrail
+    file: bad_kotlin_langchain4j_tools_no_guardrail.kt
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: medium
+    explanation: "Same agent in Kotlin: tools exposed to the model and no input guardrail. Added for xygeni-product-backlog#2244 (Kotlin). Detected with 6.21.0."
+  - detector: tool-invoking-agent-without-input-guardrail
+    file: bad_go_openai_tools_no_guardrail.go
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: medium
+    explanation: "An openai-go handler passes the raw query parameter to a model with a send_email tool and executes the returned tool calls, with no input guardrail. Added for xygeni-product-backlog#2244 (Go). Not detected in the 2026-10-20 scan with 6.21.0: no agent with tools is recognised in Go."
+  - detector: tool-invoking-agent-without-input-guardrail
+    file: bad_java_multifile_tools_no_guardrail/AgentApp.java
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: medium
+    explanation: "Same scenario as bad_java_langchain4j_tools_no_guardrail.java, split in three files (Assistant, EmailTool, AgentApp) as in a real project: an AiServices agent with an email tool behind a REST endpoint and no input guardrail. Added for xygeni-product-backlog#2244. Detected with 6.21.0, 2026-10-20."
+  - detector: tool-invoking-agent-without-input-guardrail
+    file: bad_java_multifile_tools_text_only_model/AgentApp.java
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: medium
+    explanation: "Same multi-file agent with a text-only model (gpt-3.5-turbo). Still flagged here: the tools have no input guardrail. Unlike the gpt-4o variant it gets no multi-modal-input-without-sanitization finding, which shows that detector reads the model capability and not the code. Added for xygeni-product-backlog#2244. Detected with 6.21.0, 2026-10-20."
+  - detector: tool-invoking-agent-without-input-guardrail
+    file: bad_kotlin_langchain4j_agentapp_tools_no_guardrail.kt
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: medium
+    explanation: "Kotlin variant with the Assistant interface and the tool class in the same file as the REST controller. Added for xygeni-product-backlog#2244. Detected with 6.21.0, 2026-10-20."
 pass:
   - file: good.py
+  - file: good_java_langchain4j_tools_with_input_guardrail.java
+  - file: good_kotlin_langchain4j_tools_with_input_guardrail.kt
+  - file: good_go_openai_tools_with_input_guardrail.go
+  - file: good_java_agent_only_in_javadoc.java
+  - file: good_java_non_ai_rest_controller.java
+  - file: good_kotlin_non_ai_rest_controller.kt
+  - file: good_java_multifile_tools_with_input_guardrail/AgentApp.java
+  - file: good_kotlin_langchain4j_agentapp_tools_with_input_guardrail.kt

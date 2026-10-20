@@ -45,9 +45,50 @@ fail:
     severity: critical
     confidence: high
     explanation: "Same as bad_js_argv_confirms_eval.js, in TypeScript (typescriptArgvToEval_confirmsSinkPresent)."
+  - detector: untrusted-data-reaches-code-sink
+    file: bad_java_langchain4j_output_to_shell.java
+    owaspLlm: "LLM05:2025"
+    severity: critical
+    confidence: medium
+    explanation: "The text returned by ChatModel.chat is passed to Runtime.exec, so a manipulated model can run arbitrary commands. Added for xygeni-product-backlog#2244. Detected with 6.21.0, 2026-10-20."
+  - detector: untrusted-data-reaches-code-sink
+    file: bad_java_langchain4j_output_to_sql.java
+    owaspLlm: "LLM05:2025"
+    severity: critical
+    confidence: medium
+    explanation: "The text returned by ChatModel.chat is executed as SQL with Statement.executeQuery. Added for xygeni-product-backlog#2244. Detected with 6.21.0, 2026-10-20."
+  - detector: untrusted-data-reaches-code-sink
+    file: bad_kotlin_langchain4j_output_to_shell.kt
+    owaspLlm: "LLM05:2025"
+    severity: critical
+    confidence: medium
+    explanation: "Kotlin equivalent: ChatModel.chat output reaches Runtime.exec. Added for xygeni-product-backlog#2244. Not detected in the scan (6.21.0, 2026-10-20)."
+  - detector: untrusted-data-reaches-code-sink
+    file: bad_go_goopenai_output_to_shell.go
+    owaspLlm: "LLM05:2025"
+    severity: critical
+    confidence: medium
+    explanation: "A go-openai chat completion is passed to exec.Command("sh", "-c", ...). Added for xygeni-product-backlog#2244. Detected with 6.21.0, 2026-10-20."
+  - detector: untrusted-data-reaches-code-sink
+    file: bad_go_openai_output_to_sql.go
+    owaspLlm: "LLM05:2025"
+    severity: critical
+    confidence: medium
+    explanation: "An openai-go completion is passed to db.Query as SQL. Added for xygeni-product-backlog#2244. Detected with 6.21.0, 2026-10-20."
+  - detector: untrusted-data-reaches-code-sink
+    file: bad_go_anthropic_output_to_shell.go
+    owaspLlm: "LLM05:2025"
+    severity: critical
+    confidence: medium
+    explanation: "An anthropic-sdk-go message is passed to exec.Command("sh", "-c", ...). Added for xygeni-product-backlog#2244. Detected with 6.21.0, 2026-10-20."
 pass:
   - file: good_generic_source_no_sast_finding.py
   - file: good_sanitizer_breaks_chain.py
   - file: good_parameterized_query.py
   - file: good_constant_sink.py
   - file: good_js_constant_sink.js
+  - file: good_java_model_json_parsed_to_map.java
+  - file: good_java_model_json_parsed_in_helper.java
+  - file: good_go_model_json_unmarshal.go
+  - file: good_java_fixed_command_no_model.java
+  - file: good_go_fixed_command_no_model.go

@@ -30,6 +30,12 @@ fail:
     severity: high
     confidence: low
     explanation: "WebSocket server accepts unauthenticated connections and streams every message into the LLM call with no per-message extraction filtering."
+  - detector: prompt-extraction-guardrail-missing
+    file: bad_go_nethttp_public_handler_no_guardrail.go
+    owaspLlm: "LLM07:2025"
+    severity: high
+    confidence: medium
+    explanation: "A public net/http handler forwards the raw query parameter to a model with no guardrail against prompt-extraction requests. Added for xygeni-product-backlog#2244. Not detected in the scan (6.21.0, 2026-10-20)."
 pass:
   - file: good.py
   - file: good_classifier_guardrail.py

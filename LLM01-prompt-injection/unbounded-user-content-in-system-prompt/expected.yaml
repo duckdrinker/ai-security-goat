@@ -47,5 +47,11 @@ fail:
     severity: high
     confidence: medium
     explanation: "Control case: same inline pattern, but with guardrails-ai (gd.Guard.from_string) instead of nemoguardrails/llm_guard. Confirmed via real scan (2026-08-05): NOT recognized — confidence stays at the default medium, no guardrail_hint property. Only nemoguardrails and llm_guard are currently recognized by name, not guardrails-ai."
+  - detector: unbounded-user-content-in-system-prompt
+    file: bad_java_langchain4j_cv_in_system_prompt.java
+    owaspLlm: "LLM01:2025"
+    severity: high
+    confidence: medium
+    explanation: "A candidate CV is concatenated into the system prompt with no length bound or delimiting. Added for xygeni-product-backlog#2244. Not detected in the scan (6.21.0, 2026-10-20)."
 pass:
   - file: good.py

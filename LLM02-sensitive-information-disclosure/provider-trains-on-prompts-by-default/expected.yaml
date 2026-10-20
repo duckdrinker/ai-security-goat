@@ -30,6 +30,18 @@ fail:
     severity: high
     confidence: high
     explanation: "The gateway's training_opt_out flag defaults to False and is never overridden by callers, so prompts containing customer PII are eligible for provider-side training."
+  - detector: provider-trains-on-prompts
+    file: bad_java_langchain4j_gemini_default.java
+    owaspLlm: "LLM02:2025"
+    severity: high
+    confidence: medium
+    explanation: "GoogleAiGeminiChatModel is built with the default data-use settings, so prompts may be used for training by the provider. Added for xygeni-product-backlog#2244. Detected with 6.21.0, 2026-10-20."
+  - detector: provider-trains-on-prompts
+    file: bad_kotlin_langchain4j_gemini_default.kt
+    owaspLlm: "LLM02:2025"
+    severity: high
+    confidence: medium
+    explanation: "Same Gemini builder in Kotlin with default data-use settings. Added for xygeni-product-backlog#2244. Detected with 6.21.0, 2026-10-20."
 pass:
   - file: good_openai_store_false.py
   - file: good_generic_opt_out.py

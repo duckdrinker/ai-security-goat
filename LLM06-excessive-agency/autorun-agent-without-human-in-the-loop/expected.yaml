@@ -30,5 +30,26 @@ fail:
     severity: critical
     confidence: medium
     explanation: "GroupChat's executor proxy uses human_input_mode=\"NEVER\" and is wired to a deploy_to_production function, so a production rollout can be triggered without human confirmation."
+  - detector: autorun-agent-without-human-in-the-loop
+    file: bad_java_langchain4j_email_autorun.java
+    owaspLlm: "LLM06:2025"
+    severity: high
+    confidence: medium
+    explanation: "A langchain4j AiServices agent holds a sendEmail tool and is driven by a while(true) loop with no approval step, so mail goes out unattended. Added for xygeni-product-backlog#2244 (Java). Not detected in the 2026-10-20 scan with 6.21.0: this detector reported nothing on Java, Kotlin or Go."
+  - detector: autorun-agent-without-human-in-the-loop
+    file: bad_kotlin_langchain4j_file_write_autorun.kt
+    owaspLlm: "LLM06:2025"
+    severity: high
+    confidence: medium
+    explanation: "A langchain4j agent holds a writeFile tool and runs in a while(true) loop with no approval, so files are written to disk unattended. Added for xygeni-product-backlog#2244 (Kotlin). Not detected in the 2026-10-20 scan with 6.21.0."
+  - detector: autorun-agent-without-human-in-the-loop
+    file: bad_go_openai_refund_autorun.go
+    owaspLlm: "LLM06:2025"
+    severity: critical
+    confidence: medium
+    explanation: "An openai-go loop executes every refund tool call the model returns, with no approval gate between the model decision and the money movement. Added for xygeni-product-backlog#2244 (Go). Not detected by this detector in the 2026-10-20 scan with 6.21.0 (recursive-agent-without-iteration-cap does fire on the loop)."
 pass:
   - file: good.py
+  - file: good_java_langchain4j_email_with_approval.java
+  - file: good_kotlin_langchain4j_file_write_with_approval.kt
+  - file: good_go_openai_refund_with_approval.go

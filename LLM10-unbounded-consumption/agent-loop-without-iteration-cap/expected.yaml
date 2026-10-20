@@ -40,5 +40,26 @@ fail:
     confidence: medium
     explanation: "The only stop condition is a `done` flag the model sets itself in its own structured output — there is no independent step counter or max-steps fallback."
 
+  - detector: recursive-agent-without-iteration-cap
+    file: bad_java_langchain4j_while_true_loop.java
+    owaspLlm: "LLM10:2025"
+    severity: high
+    confidence: medium
+    explanation: "A langchain4j assistant is called inside while(true) with no iteration cap or budget, so the loop can run (and bill) forever. Added for xygeni-product-backlog#2244. Detected with 6.21.0, 2026-10-20."
+  - detector: recursive-agent-without-iteration-cap
+    file: bad_kotlin_langchain4j_while_true_loop.kt
+    owaspLlm: "LLM10:2025"
+    severity: high
+    confidence: medium
+    explanation: "A langchain4j assistant is called inside while(true) in Kotlin with no iteration cap or budget. Added for xygeni-product-backlog#2244. Detected with 6.21.0, 2026-10-20."
+  - detector: recursive-agent-without-iteration-cap
+    file: bad_go_openai_for_loop.go
+    owaspLlm: "LLM10:2025"
+    severity: high
+    confidence: medium
+    explanation: "A bare for {} loop feeds each openai-go completion back into the next request with no iteration cap or token budget. Added for xygeni-product-backlog#2244. Detected with 6.21.0, 2026-10-20."
 pass:
   - file: good.py
+  - file: good_java_langchain4j_bounded_loop.java
+  - file: good_kotlin_langchain4j_bounded_loop.kt
+  - file: good_go_openai_bounded_loop.go
