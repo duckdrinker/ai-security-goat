@@ -1,5 +1,5 @@
 """
-Triggers browsing-tool-raw-content-without-url-allowlist: a "deep research"
+Triggers browsing-tool-returns-raw-content: a "deep research"
 agent fetches a starting page, hands the extracted links to the LLM, and lets
 it pick which link to follow next — recursively. Each hop re-uses the same
 unguarded fetch, so a single malicious page (or a prompt-injected snippet

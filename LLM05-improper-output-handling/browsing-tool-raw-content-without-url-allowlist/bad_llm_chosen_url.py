@@ -1,5 +1,5 @@
 """
-Triggers browsing-tool-raw-content-without-url-allowlist: the URL to fetch is
+Triggers browsing-tool-returns-raw-content: the URL to fetch is
 not even supplied by the end user — it's extracted straight out of the LLM's
 own free-text response ("I should check this link: ...") and then fetched
 immediately. This is the clearest form of the risk: the model itself, having

@@ -1,5 +1,5 @@
 """
-Triggers browsing-tool-raw-content-without-url-allowlist: same missing
+Triggers browsing-tool-returns-raw-content: same missing
 allowlist, different stack — an async agent tool built on httpx, used inside
 a function-calling loop where the model supplies `url` as a JSON tool-call
 argument. Async/httpx doesn't change the risk: no host/IP validation happens

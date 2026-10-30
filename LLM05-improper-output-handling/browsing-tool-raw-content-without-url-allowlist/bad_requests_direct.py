@@ -1,5 +1,5 @@
 """
-Triggers browsing-tool-raw-content-without-url-allowlist: the agent's
+Triggers browsing-tool-returns-raw-content: the agent's
 "browse the web" tool takes whatever URL string it's given and fetches it
 with requests.get(), with no check on scheme, host, or IP range. Since the
 LLM decides the tool call arguments (including this URL) based on untrusted

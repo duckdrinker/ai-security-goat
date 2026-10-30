@@ -1,5 +1,5 @@
 """
-Mitigated equivalent for browsing-tool-raw-content-without-url-allowlist.
+Mitigated equivalent for browsing-tool-returns-raw-content.
 
 Every URL — whether it comes from a user, from the LLM's own output, or from
 a link extracted out of a previously-fetched page — is validated against an

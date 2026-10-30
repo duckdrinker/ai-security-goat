@@ -1,5 +1,5 @@
 """
-Triggers browsing-tool-raw-content-without-url-allowlist: a LangChain-style
+Triggers browsing-tool-returns-raw-content: a LangChain-style
 custom Tool exposes browsing to a ReAct agent. The agent framework parses the
 LLM's "Action Input: <url>" text and calls `_run(url)` directly — the tool
 implementation trusts that input completely and performs the fetch with no
