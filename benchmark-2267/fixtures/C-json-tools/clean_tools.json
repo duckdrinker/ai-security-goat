@@ -1,0 +1,9 @@
+{
+  "tools": [
+    {
+      "name": "add",
+      "description": "Adds two numbers and returns the sum.",
+      "inputSchema": { "type": "object", "properties": { "a": { "type": "number" }, "b": { "type": "number" } } }
+    }
+  ]
+}
